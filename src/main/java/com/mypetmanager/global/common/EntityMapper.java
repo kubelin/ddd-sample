@@ -29,6 +29,7 @@ public interface EntityMapper {
 	OwnerDomain convertToOwnerDomain(OwnerVO ownerVo);
 	List<OwnerDomain> convertToOwnerDomainList(List<OwnerVO> ownerVo);
 	
+	
 	// DTO to ENTITY
 	Owner convertToOwner(OwnerDto dto);
 	// DTO to domain
