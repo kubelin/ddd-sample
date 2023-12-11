@@ -12,6 +12,9 @@ target/
 .settings
 .springBeans
 .sts4-cache
+# bin 폴더 및 lib 폴더의 모든 파일 제외
+bin/*
+lib/*
 
 ### IntelliJ IDEA ###
 .idea
@@ -19,9 +22,7 @@ target/
 *.iml
 *.ipr
 
-# bin 폴더 및 lib 폴더의 모든 파일 제외
-bin/*
-lib/*
+
 
 ### NetBeans ###
 /nbproject/private/
