@@ -3,6 +3,7 @@ package com.mypetmanager.global.common;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -26,6 +27,7 @@ public interface EntityMapper {
 	OwnerVO convertToOwnerVO(Owner entitiy);
 	List<OwnerVO> convertToOwnerVoList(List<Owner> entitiy);
 	// VO to Domain
+	@Mapping(target = "pet", ignore = true)
 	OwnerDomain convertToOwnerDomain(OwnerVO ownerVo);
 	List<OwnerDomain> convertToOwnerDomainList(List<OwnerVO> ownerVo);
 	

@@ -96,7 +96,7 @@ public class OwnerAdapter extends GenericJpaAdapter implements OwnerRepository {
 	@Override
 	public void updateOwner(OwnerDto ownerDto) throws Exception {
 		// Entity
-		Owner owner = super.findEntity( Owner.class, ownerDto.getOwnerId() );
+		Owner owner = findEntity( Owner.class, ownerDto.getOwnerId() );
 		if( owner != null ) {
 			// set DTO's value to Entity's field
 			super.setDtoToEntity(owner, ownerDto);

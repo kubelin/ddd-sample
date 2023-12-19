@@ -1,7 +1,6 @@
 package com.mypetmanager.business.domain.owner;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -30,6 +29,7 @@ public class OwnerDomain extends OwnerRootDomain{
 	}
 	@Enumerated(EnumType.STRING)
 	private OwnerStatus status;
+	private OwnerVO owerVo;
 	
 	private Long ownerId;
 	private String name;
@@ -42,7 +42,8 @@ public class OwnerDomain extends OwnerRootDomain{
 	
 	private MembershipDTO membershipDto;
 	
-	private List<Pet> petList;
+	
+	private Pet pet;
 	
 	public OwnerVO getMasterOwnerVO(Long ownerId) throws Exception {
 		return super.getOwnerRepo().masterOwnerVO(ownerId);
@@ -77,7 +78,7 @@ public class OwnerDomain extends OwnerRootDomain{
 		return "OwnerDomain [ownerRpeo=" + super.getOwnerRepo() + ", status=" + status + ", ownerId=" + ownerId + ", name=" + name
 				+ ", birthDate=" + birthDate + ", email=" + email + ", phoneNumber=" + phoneNumber + ", address="
 				+ address + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", membershipVO=" + membershipDto
-				+ ", petLits=" + petList + "]";
+				+ ", petLits=" + pet + "]";
 	}
 	
 	

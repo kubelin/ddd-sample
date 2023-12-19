@@ -22,8 +22,6 @@ import java.lang.annotation.Target;
 
 import org.springframework.stereotype.Component;
 
-import lombok.AllArgsConstructor;
-
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Component

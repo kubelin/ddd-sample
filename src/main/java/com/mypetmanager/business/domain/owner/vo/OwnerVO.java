@@ -1,7 +1,9 @@
 package com.mypetmanager.business.domain.owner.vo;
 
 import java.sql.Timestamp;
+import java.util.List;
 
+import com.mypetmanager.business.domain.pet.dto.PetDto;
 import com.mypetmanager.global.annotation.domain.ValueObject;
 import com.mypetmanager.integration.repository.owner.dto.MembershipDTO;
 
@@ -22,6 +24,8 @@ public class OwnerVO {
 	private Timestamp updatedAt;
 	
 	private MembershipDTO membershipDto;
+	
+	private List<PetDto> petList;
 	
 	public OwnerVO() {
 	}
