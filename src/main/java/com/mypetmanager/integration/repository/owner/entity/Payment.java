@@ -1,6 +1,8 @@
 package com.mypetmanager.integration.repository.owner.entity;
 import java.time.LocalDateTime;
 
+import com.mypetmanager.global.annotation.domain.SubDomain;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+@SubDomain("OwnerDomain")
 @Entity
 @Table(name = "payment")
 public class Payment {
@@ -35,5 +38,12 @@ public class Payment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+	@Override
+	public String toString() {
+		return "Payment [payId=" + payId + ", owner=" + owner + ", payType=" + payType + ", payDetail=" + payDetail
+				+ ", payState=" + payState + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+	}
+
     // Getters and setters
+    
 }

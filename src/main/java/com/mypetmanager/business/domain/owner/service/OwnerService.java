@@ -1,8 +1,8 @@
 package com.mypetmanager.business.domain.owner.service;
 
-import org.springframework.stereotype.Service;
+import com.mypetmanager.global.annotation.application.SampleService;
 
-@Service
+@SampleService("OwnerService")
 public interface OwnerService {
 
 }

@@ -1,6 +1,8 @@
 package com.mypetmanager.integration.repository.owner.entity;
 import java.sql.Timestamp;
 
+import com.mypetmanager.global.annotation.domain.SubDomain;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,11 +10,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.Setter;
 
+@SubDomain("OwnerDomain")
 @Entity
 @Getter
-@Setter
 @Table(name = "owner")
 public class Owner {
 	
@@ -45,6 +46,14 @@ public class Owner {
     public void setOnlyName() {
     	
     }
+
+	@Override
+	public String toString() {
+		return "Owner [ownerId=" + ownerId + ", name=" + name + ", birthDate=" + birthDate + ", email=" + email
+				+ ", phoneNumber=" + phoneNumber + ", address=" + address + ", createdAt=" + createdAt + ", updatedAt="
+				+ updatedAt + "]";
+	}
+    
     
     
 }

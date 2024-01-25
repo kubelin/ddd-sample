@@ -1,17 +1,15 @@
-package com.mypetmanager.business.domain.owner.vo;
+package com.mypetmanager.business.domain.owner.record;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.mypetmanager.business.domain.owner.dto.MembershipDto;
 import com.mypetmanager.business.domain.pet.dto.PetDto;
 import com.mypetmanager.global.annotation.domain.ValueObject;
-import com.mypetmanager.integration.repository.owner.dto.MembershipDTO;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @ValueObject
-@Setter
 @Getter
 public class OwnerVO {
 	private Long ownerId;
@@ -23,7 +21,7 @@ public class OwnerVO {
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 	
-	private MembershipDTO membershipDto;
+	private MembershipDto membershipDto;
 	
 	private List<PetDto> petList;
 	
@@ -31,7 +29,7 @@ public class OwnerVO {
 	}
 	
 	public OwnerVO(Long ownerId, String name, String birthDate, String email, String phoneNumber, String address,
-			Timestamp createdAt, Timestamp updatedAt, MembershipDTO membershipDto) {
+			Timestamp createdAt, Timestamp updatedAt, MembershipDto membershipDto) {
 		super();
 		this.ownerId = ownerId;
 		this.name = name;
@@ -42,6 +40,10 @@ public class OwnerVO {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.membershipDto = membershipDto;
+	}
+	
+	public void setMembership(MembershipDto membership) {
+		this.membershipDto = membership;
 	}
 	
 	

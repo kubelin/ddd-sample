@@ -12,7 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class OwnerDto {
+public class OwnerRepoDto {
 	private Long ownerId;
 	private String name;
 	private String birthDate;
@@ -21,9 +21,9 @@ public class OwnerDto {
 	private String address;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
-	
+
 	@Builder
-	public OwnerDto(Long ownerId, String name, String birthDate, String email, String phoneNumber, String address,
+	public OwnerRepoDto(Long ownerId, String name, String birthDate, String email, String phoneNumber, String address,
 			Timestamp createdAt, Timestamp updatedAt) {
 		super();
 		this.ownerId = ownerId;
@@ -35,6 +35,6 @@ public class OwnerDto {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
-	
-	
+
+
 }

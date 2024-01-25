@@ -36,3 +36,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+## queryDsl
+/src/main/generated

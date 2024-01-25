@@ -1,0 +1,74 @@
+2024-01-26 00:01:59.647 ERROR [traceId=] [main] [o.s.b.d.LoggingFailureAnalysisReporter] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 5 of constructor in com.mypetmanager.application.controller.testController required a bean of type 'io.micrometer.observation.ObservationRegistry' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'io.micrometer.observation.ObservationRegistry' in your configuration.
+
+2024-01-26 00:05:15.589 ERROR [traceId=] [main] [o.springframework.boot.SpringApplication] - Application run failed
+org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator$NoSuchHealthContributorException: Included health contributor 'livenessstate' in group 'liveness' does not exist
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.validate(HealthEndpointConfiguration.java:259)
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.lambda$validateGroups$0(HealthEndpointConfiguration.java:244)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:721)
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.validateGroups(HealthEndpointConfiguration.java:243)
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.afterSingletonsInstantiated(HealthEndpointConfiguration.java:239)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:984)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:950)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:616)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:738)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:440)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:316)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1295)
+	at com.mypetmanager.MyPetApplication.main(MyPetApplication.java:18)
+2024-01-26 00:06:44.230 ERROR [traceId=] [main] [o.springframework.boot.SpringApplication] - Application run failed
+org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator$NoSuchHealthContributorException: Included health contributor 'livenessstate' in group 'liveness' does not exist
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.validate(HealthEndpointConfiguration.java:259)
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.lambda$validateGroups$0(HealthEndpointConfiguration.java:244)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:721)
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.validateGroups(HealthEndpointConfiguration.java:243)
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.afterSingletonsInstantiated(HealthEndpointConfiguration.java:239)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:984)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:950)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:616)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:738)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:440)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:316)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1295)
+	at com.mypetmanager.MyPetApplication.main(MyPetApplication.java:18)
+2024-01-26 00:07:23.934 ERROR [traceId=] [main] [o.springframework.boot.SpringApplication] - Application run failed
+org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator$NoSuchHealthContributorException: Included health contributor 'livenessstate' in group 'liveness' does not exist
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.validate(HealthEndpointConfiguration.java:259)
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.lambda$validateGroups$0(HealthEndpointConfiguration.java:244)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:721)
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.validateGroups(HealthEndpointConfiguration.java:243)
+	at org.springframework.boot.actuate.autoconfigure.health.HealthEndpointConfiguration$HealthEndpointGroupMembershipValidator.afterSingletonsInstantiated(HealthEndpointConfiguration.java:239)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:984)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:950)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:616)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:738)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:440)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:316)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1295)
+	at com.mypetmanager.MyPetApplication.main(MyPetApplication.java:18)
+2024-01-26 00:10:35.323 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.grpc.OkHttpGrpcExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:4318
+2024-01-26 00:12:11.183 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.grpc.OkHttpGrpcExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:4318
+2024-01-26 00:38:09.385 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.grpc.OkHttpGrpcExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:4318
+2024-01-26 00:38:19.390 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.grpc.OkHttpGrpcExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:4318
+2024-01-26 00:45:22.507 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:4318
+2024-01-26 00:48:04.708 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:4318
+2024-01-26 00:48:24.717 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:4318
+2024-01-26 00:52:02.503 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:4318

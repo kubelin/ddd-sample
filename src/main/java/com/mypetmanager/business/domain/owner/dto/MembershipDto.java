@@ -1,25 +1,24 @@
-package com.mypetmanager.integration.repository.owner.dto;
+package com.mypetmanager.business.domain.owner.dto;
 
 import java.time.LocalDateTime;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter
 @Getter
 @NoArgsConstructor
-public class MembershipDTO {
-    private Long memberId;
-    private String memberType;
-    private String memberDetail;
-    private int memberPoint;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    
-    @Builder
-	public MembershipDTO(Long memberId, String memberType, String memberDetail, int memberPoint,
+public class MembershipDto {
+	public String dd;
+	private Long memberId;
+	private String memberType;
+	private String memberDetail;
+	private int memberPoint;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
+
+	@Builder
+	public MembershipDto(Long memberId, String memberType, String memberDetail, int memberPoint,
 			LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super();
 		this.memberId = memberId;
@@ -36,5 +35,4 @@ public class MembershipDTO {
 				+ ", memberPoint=" + memberPoint + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 
-    
 }

@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.mypetmanager.business.domain.owner.vo.OwnerVO;
+import com.mypetmanager.business.domain.owner.dto.MembershipDto;
+import com.mypetmanager.business.domain.owner.dto.OwnerDto;
+import com.mypetmanager.business.domain.owner.record.OwnerVO;
 import com.mypetmanager.global.common.EntityMapper;
 import com.mypetmanager.global.infra.GenericJpaAdapter;
 import com.mypetmanager.integration.repository.owner.MembershipJpaRepository;
 import com.mypetmanager.integration.repository.owner.OwnerJpaRepository;
 import com.mypetmanager.integration.repository.owner.OwnerRepository;
-import com.mypetmanager.integration.repository.owner.dto.MembershipDTO;
-import com.mypetmanager.integration.repository.owner.dto.OwnerDto;
 import com.mypetmanager.integration.repository.owner.entity.Membership;
 import com.mypetmanager.integration.repository.owner.entity.Owner;
 
@@ -26,7 +26,7 @@ public class OwnerAdapter extends GenericJpaAdapter implements OwnerRepository {
 	@Override
 	public OwnerVO masterOwnerVO(Long ownerId) throws Exception {
 		OwnerVO returnVO;
-		MembershipDTO membershipDto;
+		MembershipDto membershipDto;
 		Owner owner;
 		Membership memberEntitiy;
 
@@ -37,7 +37,7 @@ public class OwnerAdapter extends GenericJpaAdapter implements OwnerRepository {
 		memberEntitiy = memberJpaRepo.findById(ownerId).orElseThrow(() -> new Exception("null"));
 		membershipDto = EntityMapper.INSTANCE.convertToMembershipDto(memberEntitiy);
 		
-		returnVO.setMembershipDto(membershipDto);
+		returnVO.setMembership(membershipDto);
 
 		return returnVO;
 	}
@@ -45,7 +45,7 @@ public class OwnerAdapter extends GenericJpaAdapter implements OwnerRepository {
 	@Override
 	public List<OwnerVO> masterOwnerVoList() throws Exception {
 		List<OwnerVO> returnVO;
-		MembershipDTO membershipDto;
+		MembershipDto membershipDto;
 		List<Owner> ownerList;
 		Membership memberEntitiy;
 
@@ -75,9 +75,9 @@ public class OwnerAdapter extends GenericJpaAdapter implements OwnerRepository {
 	}
 
 	@Override
-	public MembershipDTO getMembershipVO(Long memberId) throws Exception {
+	public MembershipDto getMembershipVO(Long memberId) throws Exception {
 		Membership memberEntitiy = memberJpaRepo.findById(memberId).orElseThrow(() -> new Exception("null"));
-		MembershipDTO resultVO = EntityMapper.INSTANCE.convertToMembershipDto(memberEntitiy);
+		MembershipDto resultVO = EntityMapper.INSTANCE.convertToMembershipDto(memberEntitiy);
 
 		return resultVO;
 	}
