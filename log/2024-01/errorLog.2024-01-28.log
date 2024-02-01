@@ -1,0 +1,82 @@
+2024-01-28 16:31:40.195 ERROR [traceId=] [main] [o.s.b.d.LoggingFailureAnalysisReporter] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of method innerHttpComponentsClientHttpRequestFactory in com.mypetmanager.global.config.HttpConfig required a bean of type 'org.apache.hc.client5.http.io.HttpClientConnectionManager' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'org.apache.hc.client5.http.io.HttpClientConnectionManager' in your configuration.
+
+2024-01-28 16:33:24.831 ERROR [traceId=] [OkHttp http://192.168.10.101:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to /192.168.10.101:4318
+2024-01-28 16:42:15.530 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:4318
+2024-01-28 16:42:50.540 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: Connection reset
+2024-01-28 21:59:03.511 ERROR [traceId=] [OkHttp http://192.168.10.101:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: timeout
+2024-01-28 22:09:36.049 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:4318
+2024-01-28 22:25:06.440 ERROR [traceId=] [OkHttp http://172.22.210.45:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: Failed to connect to /172.22.210.45:4318
+2024-01-28 22:26:16.617 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: unexpected end of stream on http://localhost:4318/...
+2024-01-28 22:29:47.566 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: unexpected end of stream on http://localhost:4318/...
+2024-01-28 22:30:25.375 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: unexpected end of stream on http://localhost:4318/...
+2024-01-28 22:33:57.590 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: unexpected end of stream on http://localhost:4318/...
+2024-01-28 22:37:20.399 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: unexpected end of stream on http://localhost:4318/...
+2024-01-28 22:44:11.100 ERROR [traceId=] [OkHttp http://localhost:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: unexpected end of stream on http://localhost:4318/...
+2024-01-28 22:59:16.734 ERROR [traceId=] [main] [o.s.b.web.embedded.tomcat.TomcatStarter] - Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'webMvcObservationFilter' defined in class path resource [org/springframework/boot/actuate/autoconfigure/observation/web/servlet/WebMvcObservationAutoConfiguration.class]: Unsatisfied dependency expressed through method 'webMvcObservationFilter' parameter 0: Error creating bean with name 'observationRegistry' defined in class path resource [org/springframework/boot/actuate/autoconfigure/observation/ObservationAutoConfiguration.class]: Error creating bean with name 'propagatingSenderTracingObservationHandler' defined in class path resource [org/springframework/boot/actuate/autoconfigure/tracing/MicrometerTracingAutoConfiguration.class]: Unsatisfied dependency expressed through method 'propagatingSenderTracingObservationHandler' parameter 1: No qualifying bean of type 'io.micrometer.tracing.propagation.Propagator' available: expected single matching bean but found 2: bravePropagator,otelPropagator
+2024-01-28 22:59:16.786 ERROR [traceId=] [main] [o.s.b.d.LoggingFailureAnalysisReporter] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 1 of method propagatingSenderTracingObservationHandler in org.springframework.boot.actuate.autoconfigure.tracing.MicrometerTracingAutoConfiguration required a single bean, but 2 were found:
+	- bravePropagator: defined by method 'bravePropagator' in class path resource [org/springframework/boot/actuate/autoconfigure/tracing/BraveAutoConfiguration.class]
+	- otelPropagator: defined by method 'otelPropagator' in class path resource [org/springframework/boot/actuate/autoconfigure/tracing/OpenTelemetryAutoConfiguration.class]
+
+
+Action:
+
+Consider marking one of the beans as @Primary, updating the consumer to accept multiple beans, or using @Qualifier to identify the bean that should be consumed
+
+2024-01-28 22:59:54.408 ERROR [traceId=] [main] [o.s.b.web.embedded.tomcat.TomcatStarter] - Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'webMvcObservationFilter' defined in class path resource [org/springframework/boot/actuate/autoconfigure/observation/web/servlet/WebMvcObservationAutoConfiguration.class]: Unsatisfied dependency expressed through method 'webMvcObservationFilter' parameter 0: Error creating bean with name 'observationRegistry' defined in class path resource [org/springframework/boot/actuate/autoconfigure/observation/ObservationAutoConfiguration.class]: Error creating bean with name 'propagatingSenderTracingObservationHandler' defined in class path resource [org/springframework/boot/actuate/autoconfigure/tracing/MicrometerTracingAutoConfiguration.class]: Unsatisfied dependency expressed through method 'propagatingSenderTracingObservationHandler' parameter 1: No qualifying bean of type 'io.micrometer.tracing.propagation.Propagator' available: expected single matching bean but found 2: bravePropagator,otelPropagator
+2024-01-28 22:59:54.462 ERROR [traceId=] [main] [o.s.b.d.LoggingFailureAnalysisReporter] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 1 of method propagatingSenderTracingObservationHandler in org.springframework.boot.actuate.autoconfigure.tracing.MicrometerTracingAutoConfiguration required a single bean, but 2 were found:
+	- bravePropagator: defined by method 'bravePropagator' in class path resource [org/springframework/boot/actuate/autoconfigure/tracing/BraveAutoConfiguration.class]
+	- otelPropagator: defined by method 'otelPropagator' in class path resource [org/springframework/boot/actuate/autoconfigure/tracing/OpenTelemetryAutoConfiguration.class]
+
+
+Action:
+
+Consider marking one of the beans as @Primary, updating the consumer to accept multiple beans, or using @Qualifier to identify the bean that should be consumed
+
+2024-01-28 23:00:36.010 ERROR [traceId=] [main] [o.s.b.web.embedded.tomcat.TomcatStarter] - Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'webMvcObservationFilter' defined in class path resource [org/springframework/boot/actuate/autoconfigure/observation/web/servlet/WebMvcObservationAutoConfiguration.class]: Unsatisfied dependency expressed through method 'webMvcObservationFilter' parameter 0: Error creating bean with name 'observationRegistry' defined in class path resource [org/springframework/boot/actuate/autoconfigure/observation/ObservationAutoConfiguration.class]: Error creating bean with name 'propagatingSenderTracingObservationHandler' defined in class path resource [org/springframework/boot/actuate/autoconfigure/tracing/MicrometerTracingAutoConfiguration.class]: Unsatisfied dependency expressed through method 'propagatingSenderTracingObservationHandler' parameter 1: No qualifying bean of type 'io.micrometer.tracing.propagation.Propagator' available: expected single matching bean but found 2: bravePropagator,otelPropagator
+2024-01-28 23:00:36.055 ERROR [traceId=] [main] [o.s.b.d.LoggingFailureAnalysisReporter] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 1 of method propagatingSenderTracingObservationHandler in org.springframework.boot.actuate.autoconfigure.tracing.MicrometerTracingAutoConfiguration required a single bean, but 2 were found:
+	- bravePropagator: defined by method 'bravePropagator' in class path resource [org/springframework/boot/actuate/autoconfigure/tracing/BraveAutoConfiguration.class]
+	- otelPropagator: defined by method 'otelPropagator' in class path resource [org/springframework/boot/actuate/autoconfigure/tracing/OpenTelemetryAutoConfiguration.class]
+
+
+Action:
+
+Consider marking one of the beans as @Primary, updating the consumer to accept multiple beans, or using @Qualifier to identify the bean that should be consumed
+
+2024-01-28 23:44:00.313 ERROR [traceId=] [OkHttp http://127.0.0.1:4318/...] [i.o.e.internal.okhttp.OkHttpExporter] - Failed to export spans. The request could not be executed. Full error message: 현재 연결은 사용자의 호스트 시스템의 소프트웨어의 의해 중단되었습니다

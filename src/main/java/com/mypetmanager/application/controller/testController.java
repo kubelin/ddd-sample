@@ -24,10 +24,15 @@ import com.mypetmanager.integration.repository.pet.dto.PetResponseDto;
 import com.mypetmanager.integration.repository.querydsl.AdvancedRepository;
 
 import io.micrometer.observation.Observation;
+import io.micrometer.observation.Observation.Context;
 import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.ObservationView;
+import io.opentelemetry.api.trace.Span;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @AllArgsConstructor
 public class testController {
@@ -40,12 +45,25 @@ public class testController {
 	private RestTemplate restTemplate;
 	private ObservationRegistry observ;
 
+	//@Qualifier("innerMicroRestTemplate")
+	private RestTemplate innerMicroRestTemplate;
+	// Observability
+	private final ObservationRegistry registry;
+
 	@RequestMapping("/owners/testM1")
 	public void testMethod() throws Exception {
 		System.out.println("testM1");
 		String targetRootDomain = "OwnerDomain";
 
 		ownerFactory.createDomain(1L);
+	}
+
+	@RequestMapping("/owners/testM2")
+	public void testMethod2() throws Exception {
+		log.trace("call testMethod2 : {}");
+		Span test = Span.current();
+		test.setAttribute("mymethod2 =>", "hahaha");
+		log.info("current  span => {}", test);
 
 	}
 
@@ -54,13 +72,33 @@ public class testController {
 	String ownerId) {
 
 		final Logger logger = LoggerFactory.getLogger(testController.class);
-		logger.info("가즈아");
-
-		Observation ob = observ.getCurrentObservation();
-		logger.info(ob.getContext().toString());
-
+		String LOCAL_URL = "http://localhost:8089";
 		String BASE_URL = "http://localhost:8081";
-		restTemplate.getForObject(BASE_URL + "/owners/get", String.class);
+		logger.info("가즈아");
+		Observation currentOb = observ.getCurrentObservation();
+
+		var observation = Observation.createNotStarted("fetch-commit", registry).start();
+		Span test = Span.current();
+		test.setAttribute("mymethod1 =>", "kkkkkkkkk");
+		logger.info("current  span => {}", test);
+
+		try (var ignored = currentOb.openScope()) {
+			String commitMsg = this.restTemplate.getForObject("https://whatthecommit.com/index.txt", String.class);
+			currentOb.highCardinalityKeyValue("commit.message", commitMsg);
+
+			currentOb.event(Observation.Event.of("commit-fetched"));
+
+
+			Context context = currentOb.getContext();
+			logger.info("show context => {}", context);
+			logger.info("show getAllKeyValues => {}", context.getAllKeyValues());
+
+			innerMicroRestTemplate.getForObject(BASE_URL + "/owners/testM1", String.class);
+
+			ObservationView obv = context.getParentObservation();
+			logger.info("show ObservationView => {}", obv);
+
+		}
 
 		OwnerDomain ownerDomain = null;
 		List<OwnerDomain> ownerDomainList = null;
@@ -87,6 +125,10 @@ public class testController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		innerMicroRestTemplate.getForObject(LOCAL_URL + "/owners/testM2", String.class);
+
+		currentOb.stop();
 
 		return new ResponseEntity<>(resultDto, HttpStatus.OK);
 	}

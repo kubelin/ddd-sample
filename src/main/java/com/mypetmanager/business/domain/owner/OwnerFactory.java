@@ -13,6 +13,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import com.mypetmanager.business.domain.owner.record.OwnerVO;
 import com.mypetmanager.global.annotation.domain.DomainFacotry;
 import com.mypetmanager.global.annotation.domain.SubDomain;
+import com.mypetmanager.global.common.EntityMapper;
 import com.mypetmanager.integration.repository.owner.OwnerRepository;
 import com.mypetmanager.integration.repository.owner.entity.Owner;
 import com.mypetmanager.integration.repository.pet.PetRepository;
@@ -53,10 +54,9 @@ public class OwnerFactory {
 		List<OwnerVO> ownerVoLsit;
 
 		ownerVoLsit = ownerRpeo.masterOwnerVoList();
-		//		ownerDomainList = EntityMapper.INSTANCE.convertToOwnerDomainList(ownerVoLsit);
+		ownerDomainList = EntityMapper.INSTANCE.convertToOwnerDomainList(ownerVoLsit);
 		//
-		//		return ownerDomainList;
-		return null;
+		return ownerDomainList;
 	}
 
 	public void loadAnnotatedClassz(OwnerDomain ownerDomain, Long ownerId) {
