@@ -1,6 +1,5 @@
 package com.mypetmanager.global.config;
 
-
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -14,7 +13,9 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Configuration
 public class HttpConfig {
 
@@ -35,19 +36,27 @@ public class HttpConfig {
 		HttpClient httpClient = HttpClientBuilder.create()
 			.setDefaultRequestConfig(requestConfig)
 			.setConnectionManager(connectionManager)
+			//			.addRequestInterceptorFirst((HttpRequestInterceptor)(request, entity, context) -> {
+			//				System.out.println("Headers : ");
+			//				//				log.info("trcacer? -> {}", tracer);
+			//				//log.info("\n\nSpan? ->\n {}", Span.current());
+			//
+			//				Header[] headers = request.getHeaders();
+			//				//request.addHeader(null);
+			//				log.info("Headers : ");
+			//				for (int i = 0; i < headers.length; i++) {
+			//					log.info("  {} : {}", headers[i].getName(), headers[i].getValue());
+			//				}
+			//				log.info("Request Method: {}", request.getMethod());
+			//				try {
+			//					log.info("URL: {}", request.getUri());
+			//				} catch (URISyntaxException e) {
+			//					// TODO Auto-generated catch block
+			//					e.printStackTrace();
+			//				}
+			//			})
 			.build();
-			/*
-			.addRequestInterceptorFirst((HttpRequestInterceptor) (request, entity, context) -> {
-			          Header[] headers = request.getHeaders();
-			          request.addHeader(null);
-			          log.info("Headers : ");
-			          for(int i=0; i < headers.length; i++) {
-			                     log.info("  {} : {}" , headers[i].getName(), headers[i].getValue());
-			          }
-			          log.info("Request Method: {}", request.getMethod());
-			          log.info("URL: {}", request.getUrl);
-			})
-			*/
+
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		return factory;
 
@@ -56,8 +65,7 @@ public class HttpConfig {
 	@Bean(name = "innerMicroRestTemplate")
 	public RestTemplate innerMicroRestTemplate(@Qualifier("innerHttpComponentsClientHttpRequestFactory")
 	ClientHttpRequestFactory requestFactory) {
-
+		System.out.println("언제?? innerMicroRestTemplate");
 		return new RestTemplate(requestFactory);
-
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +24,7 @@ import com.mypetmanager.integration.repository.pet.PetRepository;
 import com.mypetmanager.integration.repository.pet.dto.PetResponseDto;
 import com.mypetmanager.integration.repository.querydsl.AdvancedRepository;
 
-import io.micrometer.observation.Observation;
-import io.micrometer.observation.Observation.Context;
 import io.micrometer.observation.ObservationRegistry;
-import io.micrometer.observation.ObservationView;
 import io.opentelemetry.api.trace.Span;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -42,13 +40,15 @@ public class testController {
 	final AdvancedRepository adRepo;
 	// factory
 	final OwnerFactory ownerFactory;
-	private RestTemplate restTemplate;
+
+	//	private RestTemplate icroRestTemplate;
+
+	@Qualifier("innerMicroRestTemplate")
+	private RestTemplate innerMicroRestTemplate;
+
+	// Observability
 	private ObservationRegistry observ;
 
-	//@Qualifier("innerMicroRestTemplate")
-	private RestTemplate innerMicroRestTemplate;
-	// Observability
-	private final ObservationRegistry registry;
 
 	@RequestMapping("/owners/testM1")
 	public void testMethod() throws Exception {
@@ -75,30 +75,33 @@ public class testController {
 		String LOCAL_URL = "http://localhost:8089";
 		String BASE_URL = "http://localhost:8081";
 		logger.info("가즈아");
-		Observation currentOb = observ.getCurrentObservation();
 
-		var observation = Observation.createNotStarted("fetch-commit", registry).start();
-		Span test = Span.current();
-		test.setAttribute("mymethod1 =>", "kkkkkkkkk");
-		logger.info("current  span => {}", test);
+		//		Observation currentOb = observ.getCurrentObservation();
+		//var observation = Observation.createNotStarted("fetch-commit", registry).start();
 
-		try (var ignored = currentOb.openScope()) {
-			String commitMsg = this.restTemplate.getForObject("https://whatthecommit.com/index.txt", String.class);
-			currentOb.highCardinalityKeyValue("commit.message", commitMsg);
+		//Span test = Span.current();
+		//test.setAttribute("mymethod1 =>", "kkkkkkkkk");
+		//logger.info("current  span => {}", test);
 
-			currentOb.event(Observation.Event.of("commit-fetched"));
+		innerMicroRestTemplate.getForObject(LOCAL_URL + "/owners/testM1", String.class);
 
-
-			Context context = currentOb.getContext();
-			logger.info("show context => {}", context);
-			logger.info("show getAllKeyValues => {}", context.getAllKeyValues());
-
-			innerMicroRestTemplate.getForObject(BASE_URL + "/owners/testM1", String.class);
-
-			ObservationView obv = context.getParentObservation();
-			logger.info("show ObservationView => {}", obv);
-
-		}
+		//		try (var ignored = currentOb.openScope()) {
+		//			String commitMsg = this.restTemplate.getForObject("https://whatthecommit.com/index.txt", String.class);
+		//			currentOb.highCardinalityKeyValue("commit.message", commitMsg);
+		//
+		//			currentOb.event(Observation.Event.of("commit-fetched"));
+		//
+		//			currentOb.stop();
+		//			Context context = currentOb.getContext();
+		//			logger.info("show context => {}", context);
+		//			logger.info("show getAllKeyValues => {}", context.getAllKeyValues());
+		//
+		//			restTemplate.getForObject(BASE_URL + "/owners/testM1", String.class);
+		//
+		//			ObservationView obv = context.getParentObservation();
+		//			logger.info("show ObservationView => {}", obv);
+		//
+		//		}
 
 		OwnerDomain ownerDomain = null;
 		List<OwnerDomain> ownerDomainList = null;
@@ -126,9 +129,9 @@ public class testController {
 			e.printStackTrace();
 		}
 
-		innerMicroRestTemplate.getForObject(LOCAL_URL + "/owners/testM2", String.class);
+		innerMicroRestTemplate.getForObject(BASE_URL + "/owners/testM2", String.class);
 
-		currentOb.stop();
+
 
 		return new ResponseEntity<>(resultDto, HttpStatus.OK);
 	}
