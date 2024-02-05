@@ -1,5 +1,7 @@
 package com.mypetmanager.global.config;
 
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +14,15 @@ import com.mypetmanager.global.handler.MyObservationHandler;
 
 import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.observation.aop.ObservedAspect;
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter;
+import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.resources.Resource;
+import io.opentelemetry.sdk.trace.SdkTracerProvider;
+import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
+import io.opentelemetry.semconv.resource.attributes.ResourceAttributes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,6 +56,31 @@ public class OtelConfiguration {
 		log.info("!!!!!!!!!!!!!! begin MyObservationHandler customObservationHandler");
 		return new MyObservationHandler(tracer);
 	}
+
+	public static OpenTelemetry initOpenTelemetry() throws Exception {
+	    // Export traces to Jaeger over OTLP
+			OtlpHttpSpanExporter jaegerOtlpExporter = OtlpHttpSpanExporter.builder()
+				.setEndpoint("http://localhost:4318/v1/traces")
+				.setTimeout(30, TimeUnit.SECONDS)
+				.build();
+
+	    Resource serviceNameResource =
+	        Resource.create(Attributes.of(ResourceAttributes.SERVICE_NAME, "otel-jaeger-example"));
+
+	    // Set to process the spans by the Jaeger Exporter
+	    SdkTracerProvider tracerProvider =
+	        SdkTracerProvider.builder()
+					.addSpanProcessor(BatchSpanProcessor.builder(jaegerOtlpExporter).build())
+	            .setResource(Resource.getDefault().merge(serviceNameResource))
+	            .build();
+	    OpenTelemetrySdk openTelemetry =
+	        OpenTelemetrySdk.builder().setTracerProvider(tracerProvider).build();
+
+	    // it's always a good idea to shut down the SDK cleanly at JVM exit.
+	    Runtime.getRuntime().addShutdownHook(new Thread(tracerProvider::close));
+
+	    return openTelemetry;
+	  }
 
 	//	@Bean
 	//    public OncePerRequestFilter traceContextFilter(Tracer tracer) {
