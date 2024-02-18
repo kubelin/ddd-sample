@@ -28,14 +28,16 @@ public class MyObservationHandler implements ObservationHandler {
 	@Override
 	public void onStart(Context context) {
 		System.out.println("-=========== start ====== ");
-		log.info("\n ======== onStart \n {} ", context);
-
+		log.info("\n ======== onStart \n {} ", context.remove("parentObservation"));
+		log.info("\n {}", context);
+		context.getParentObservation();
+		tracer.spanBuilder("test").startSpan();
 		//		Span span = tracer.spanBuilder("myFirstSpan").startSpan();
 		//		span.setStatus(StatusCode.OK);
 		//		span.setAttribute("hwta?", "왓");
 		//		span.end();
 
-		ObservationHandler.super.onStart(context);
+		//ObservationHandler.super.onStart(context);
 
 		System.out.println("-=========== end ====== ");
 

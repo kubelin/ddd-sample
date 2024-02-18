@@ -14,8 +14,9 @@ import com.mypetmanager.business.domain.owner.record.OwnerVO;
 import com.mypetmanager.integration.repository.owner.entity.Membership;
 import com.mypetmanager.integration.repository.owner.entity.Owner;
 
+
 //componentModel="spring"
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, componentModel = "spring")
 public interface EntityMapper {
 
 	EntityMapper INSTANCE = Mappers.getMapper(EntityMapper.class);

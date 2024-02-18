@@ -4,13 +4,17 @@ plugins {
 	id 'org.springframework.boot' version '3.1.5'
 	id 'io.spring.dependency-management' version '1.1.3'
 	id 'org.ec4j.editorconfig' version '0.0.3'
+	
+	id 'java-library'
+	id 'maven-publish'
+	id("com.jfrog.artifactory") version "5.2.0"
 }
 
 group = 'com.mypetmanager'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+  sourceCompatibility = '17'
 }
 
 configurations {
@@ -20,18 +24,26 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
+	//mavenCentral()
+	mavenLocal()
+	  maven {
+            name = "my-local-repo"
+            credentials {
+                  username = "admin"
+                  password = "Malife#2"
+              }
+            url = uri('http://localhost:8082/artifactory/my-local-repo/')
+              //url = layout.buildDirectory.dir("publishing-repository")
+            allowInsecureProtocol true
+        } 
+}
+
+ext {
+ set('springCloudVersion', "2022.0.3")
 }
 
 dependencies {
-
-  annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
-  implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-  implementation 'org.projectlombok:lombok'
-	//annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
-	
-	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-	
+  
 	//spring
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
@@ -44,37 +56,45 @@ dependencies {
 	// AOP
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	
-	compileOnly "org.mapstruct:mapstruct:1.4.2.Final"
-	//compileOnly 'org.projectlombzok:lombok'
-	compileOnly 'org.projectlombok:lombok'
-	
 	// reflection
 	implementation 'org.reflections:reflections:0.10.2'
 	
 	// queryDsl
-	implementation 'com.querydsl:querydsl-apt:5.0.0:jakarta'
-
-	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
-	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
-	annotationProcessor 'org.projectlombok:lombok'
-    //annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+  implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+  annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+  annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+  annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
     
+   // lombok
+   compileOnly 'org.projectlombok:lombok:1.18.30'
+   annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+   // modelMapping mapstruct
+   implementation 'org.modelmapper:modelmapper:3.2.0'
+   implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+   annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 	
 	// tracing
-//	implementation 'io.opentelemetry:opentelemetry-sdk-common'
-  implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	//implementation platform('io.micrometer:micrometer-tracing-bom:latest.release')
-	//runtimeOnly 'io.micrometer:micrometer-registry-otlp'
+    //	implementation 'io.opentelemetry:opentelemetry-sdk-common'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    //implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+    
+    implementation("io.opentelemetry:opentelemetry-api")
+    implementation("io.opentelemetry:opentelemetry-sdk")
+    implementation("io.opentelemetry:opentelemetry-exporter-logging")
+    
+    //alpha modules
+    implementation("io.opentelemetry.semconv:opentelemetry-semconv")
+  	//runtimeOnly 'io.micrometer:micrometer-registry-otlp'
 	
-	implementation 'io.micrometer:micrometer-tracing-bridge-otel'
-  implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
-  
-     implementation("io.opentelemetry:opentelemetry-api:1.34.1");
-    implementation("io.opentelemetry:opentelemetry-sdk:1.34.1");
-     implementation("io.opentelemetry:opentelemetry-exporter-logging:1.34.1");
-    implementation("io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.34.1");
-    implementation("io.opentelemetry.instrumentation:opentelemetry-java-http-client:2.0.0-alpha");
+  //
+  //implementation("io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter")
+    // implementation("io.opentelemetry:opentelemetry-api:1.34.1");
+    //implementation("io.opentelemetry:opentelemetry-sdk:1.34.1");
+     //implementation("io.opentelemetry:opentelemetry-exporter-logging:1.34.1");
+    //implementation("io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.34.1");
+    //implementation("io.opentelemetry.instrumentation:opentelemetry-java-http-client:2.0.0-alpha");
 //  implementation 'io.micrometer:micrometer-tracing'
 //	implementation "io.micrometer:micrometer-tracing-bridge-otel"
 //	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
@@ -86,48 +106,121 @@ dependencies {
 	
 	//httpClient
   implementation 'org.apache.httpcomponents.client5:httpclient5'
-
 	implementation 'com.google.protobuf:protobuf-java'
 	
 	// TEST
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
-	testCompileOnly 'org.projectlombok:lombok'
-	testAnnotationProcessor 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30' // 테스트를 위한 세팅
+  testImplementation 'org.projectlombok:lombok:1.18.30' // 테스트를 위한 세팅
+	//testCompileOnly 'org.projectlombok:lombok'
+	//testAnnotationProcessor 'org.projectlombok:lombok'
 
 }
 
-tasks.named('bootBuildImage') {
-	builder = 'paketobuildpacks/builder-jammy-base:latest'
+publishing {
+  repositories {
+        //maven {
+          //  url = uri('http://localhost:8082/artifactory/my-local-repo/') // Artifactory의 로컬 리포지토리 URL
+          //  allowInsecureProtocol = true
+          //  credentials {
+          //      username = "admin"
+          //      password = "Malife#2"
+          //  }
+        //}
+         maven {
+            name = "testRepo"
+            credentials {
+                  username = "admin"
+                  password = "Malife#2"
+              }
+            url = uri('http://localhost:8082/artifactory/my-local-repos/')
+              //url = layout.buildDirectory.dir("publishing-repository")
+            allowInsecureProtocol true
+        }
+        
+        publications {
+          //1.
+          //mavenJava(MavenPublication) {        
+              //from components.java
+          //2.
+            //maven(MavenPublication) {
+            //  groupId = 'com.mypetmanager'
+            //  artifactId = 'publish-sample'
+            //  version = '1.4'
+          //3.
+          //maven(MavenPublication) {
+          //  artifact sourceJar // Publish the output of the sourceJar task
+          //  artifact 'my-file-name.jar' // Publish a file created outside of the build
+          //  artifact source: sourceJar, classifier: 'src', extension: 'zip'
+          //}
+          myLibrary(MavenPublication) {
+            groupId = 'com.mypetmanager'
+            artifactId = 'publish-sample'
+            from components.java
+            
+            artifact bootJar
+      
+            versionMapping {
+              usage('java-api'){
+                fromResolutionOf('runtimeClasspath')
+              }
+              usage('java-runtime'){
+                fromResolutionResult()
+              }
+            } // end of versionMapping
+          } // end of myLibrary
+        }// end of publications
+    }
+}
+
+//task uploadArchives {
+//    repositories {
+//        maven {            
+//            repository(url: 'path/to/repository') {
+//                authentication(userName: 'repositoryId', password: 'repositoryPassword')
+//            }
+//            snapshotRepository(url: 'path/to/repository') {
+//                authentication(userName: 'repositoryId', password: 'repositoryPassword')
+//            }
+//        }
+//    }
+//}
+
+// Querydsl 설정부
+def querydslDir = ".apt_generated"
+//def querydslDir = 'src/main/generated'
+
+// querydsl QClass 파일 생성 위치를 지정
+tasks.withType(JavaCompile) {
+ options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+}
+
+// java source set 에 querydsl QClass 위치 추가
+sourceSets {
+ main.java.srcDirs += [ querydslDir ]
+}
+
+// gradle clean 시에 QClass 디렉토리 삭제 
+clean.doLast {
+ file(querydslDir).deleteDir()
+}
+
+dependencyManagement {
+ imports {
+  mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  mavenBom("io.opentelemetry:opentelemetry-bom:1.34.1")
+  mavenBom("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom-alpha:2.0.0-alpha")
+ }
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+  useJUnitPlatform()
 }
 
-// Querydsl 설정부
-// [3] Querydsl 설정부
-def generated = 'src/main/generated'
-
-// [4] querydsl QClass 파일 생성 위치를 지정
-tasks.withType(JavaCompile) {
-    options.getGeneratedSourceOutputDirectory().set(file(generated))
+tasks.named('bootBuildImage') {
+  builder = 'paketobuildpacks/builder-jammy-base:latest'
 }
-
-// [5] java source set 에 querydsl QClass 위치 추가
-sourceSets {
-    main.java.srcDirs += [ generated ]
-}
-
-// [6] gradle clean 시에 QClass 디렉토리 삭제
-clean {
-    delete file(generated)
-}
-
-
-//editorconfig {
-//    excludes = ['build']
-//}
-
+ 
 // check.dependsOn editorconfigCheck
 
