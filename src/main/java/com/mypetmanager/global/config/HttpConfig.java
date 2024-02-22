@@ -26,9 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.SpanContext;
 import io.opentelemetry.api.trace.Tracer;
-import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.ContextKey;
 import io.opentelemetry.context.propagation.TextMapGetter;
@@ -66,14 +64,18 @@ public class HttpConfig {
 			.setDefaultRequestConfig(requestConfig)
 			.setConnectionManager(connectionManager)
 			.addRequestInterceptorFirst((HttpRequestInterceptor)(request, entity, context) -> {
-				log.info("Context.current() : {}", Context.current());
+
 				//				System.out.println("Context : {}" Context.current);
 				try {
 
 					//					otel = OtelConfiguration.initOpenTelemetry();
+					log.info("Context.current() : {}", Context.current());
 					OpenTelemetry myOtels = GlobalOpenTelemetry.get();
 					Tracer trace = myOtels.getTracerProvider().get("mine");
 					Span mySpan = trace.spanBuilder("haha").startSpan();
+
+					log.info("RequestConfig myspan print =>> {} ", mySpan);
+					log.info("RequestConfig myspan print =>> {} ", mySpan);
 
 					log.info("myOtels.myOtels() : {}", myOtels.getTracerProvider());
 					//ExtendedContextPropagators.getTextMapPropagationContext(myOtels.getPropagators()).forEach(request::setRequestProperty);
@@ -107,28 +109,30 @@ public class HttpConfig {
 					//
 					//					otel.getPropagators().getTextMapPropagator().inject(extractedContext,
 					//						myRequest, HttpServletRequestTextMapSetter.INSTANCE);
-					SpanContext spanContext = mySpan.getSpanContext();
 
-					Context myContext = Context.root();
-
-					ContextKey<String> ANIMAL = ContextKey.named("animal");
-					ContextKey<SpanContext> TEST = ContextKey.named("test");
-					myContext.with(ANIMAL, "value");
-					myContext.with(TEST, spanContext);
-
-					log.info("myContext \n{}", myContext);
-
-					HttpServletRequestTextMapSetter2 requestTextSetter = HttpServletRequestTextMapSetter2.INSTANCE;
-					requestTextSetter.set(request, "Custom-Header", "1111111111");
-					requestTextSetter.set(request, "Dust-Header", "222222222");
+					//					SpanContext spanContext = mySpan.getSpanContext();
+					//
+					//					Context myContext = Context.root();
+					//
+					//					ContextKey<String> ANIMAL = ContextKey.named("animal");
+					//					ContextKey<SpanContext> TEST = ContextKey.named("test");
+					//					myContext.with(ANIMAL, "value");
+					//					myContext.with(TEST, spanContext);
+					//
+					//					log.info("myContext \n{}", myContext);
+					//
+					//					HttpServletRequestTextMapSetter2 requestTextSetter = HttpServletRequestTextMapSetter2.INSTANCE;
+					//					requestTextSetter.set(request, "Custom-Header", "1111111111");
+					//					requestTextSetter.set(request, "Dust-Header", "222222222");
+					//					requestTextSetter.set(request, "traceparent", "00-" + spanContext.getTraceId());
 
 					//		Context extractedContext = otel.getPropagators().getTextMapPropagator()
 					//			.extract(myContext, myRequest, requestTextSetter);
 
-					log.info("requestTextSetter \n{}", requestTextSetter);
+					//					log.info("requestTextSetter \n{}", requestTextSetter);
 					// 1. OtelPropagators로부터 TextMapPropagator 얻기
-					var propagator = myOtels.getPropagators().getTextMapPropagator();
-					var tempPropa = W3CTraceContextPropagator.getInstance();
+					//					var propagator = myOtels.getPropagators().getTextMapPropagator();
+					//					var tempPropa = W3CTraceContextPropagator.getInstance();
 					// 2. HTTP 헤더에 전달할 Carrier 객체 생성
 
 					Map<String, String> carrier = new HashMap<>();
@@ -136,7 +140,8 @@ public class HttpConfig {
 					carrier.put("Rollback", "Rollback");
 
 					//		var carrier = new HttpHeaderCarrier(request);
-					tempPropa.inject(myContext, request, requestTextSetter);
+					//tempPropa.inject(myContext, request, requestTextSetter);
+					//tempPropa.inject(myContext, request, requestTextSetter);
 
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -201,7 +206,6 @@ public class HttpConfig {
 	public static class HttpServletRequestTextMapSetter implements TextMapSetter<HttpServletResponse> {
 
 		public final static HttpServletRequestTextMapSetter INSTANCE = new HttpServletRequestTextMapSetter();
-
 
 		@Override
 		public void set(@Nullable

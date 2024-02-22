@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import com.mypetmanager.business.domain.owner.OwnerDomain;
 import com.mypetmanager.business.domain.owner.OwnerFactory;
 import com.mypetmanager.business.domain.owner.dto.OwnerDto;
+import com.mypetmanager.global.config.HttpConfig.HttpServletRequestTextMapSetter;
 import com.mypetmanager.integration.repository.owner.OwnerRepository;
 import com.mypetmanager.integration.repository.pet.PetRepository;
 import com.mypetmanager.integration.repository.pet.dto.PetResponseDto;
@@ -31,21 +32,12 @@ import com.mypetmanager.integration.repository.querydsl.AdvancedRepository;
 import io.micrometer.observation.ObservationRegistry;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.baggage.Baggage;
-import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.Tracer;
-import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
+import io.opentelemetry.context.Context;
 import io.opentelemetry.context.Scope;
-import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.context.propagation.TextMapGetter;
 import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter;
-//import io.opentelemetry.extension.incubator.trace.ExtendedTracer;
-//import io.opentelemetry.extension.incubator.trace.ExtendedTracer;
-import io.opentelemetry.sdk.OpenTelemetrySdk;
-import io.opentelemetry.sdk.resources.Resource;
-import io.opentelemetry.sdk.trace.SdkTracerProvider;
-import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
-import io.opentelemetry.semconv.ResourceAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -63,6 +55,7 @@ public class testController {
 	// factory
 	final OwnerFactory ownerFactory;
 
+	final OpenTelemetry otel;
 	final OtlpHttpSpanExporter otelHttpSpanExporter;
 	//	private RestTemplate icroRestTemplate;
 	//	private ExtendedTracer tracer;
@@ -70,21 +63,35 @@ public class testController {
 	@Qualifier("innerMicroRestTemplate")
 	private RestTemplate innerMicroRestTemplate;
 
+	private Tracer tracer; // OpenTelemetry Tracer 주입
+
+	//	@Autowired
+	//	private TextMapPropagator propagator; // OpenTelemetry TextMapPropagator 주입
+
 	// Observability
 	private ObservationRegistry observ;
 
 	private final String LOCAL_URL = "http://localhost:8089";
-	private final String BASE_URL = "http://localhost:8081";
-
+	private final String BASE_URL = "http://localhost:9081";
 
 	@RequestMapping("/owners/testM1")
 	public void testMethod(HttpServletRequest request, @RequestHeader
 	HttpHeaders headers) throws Exception {
 		System.out.println("testM1");
-		String targetRootDomain = "OwnerDomain";
 
+		// 현재의 span 가져오기
+		//OpenTelemetry otel = initOpenTelemetry();
+		//Tracer trace = otel.getTracerProvider().get("mine");
+		//Span mySpan = tracer.spanBuilder("haha2").setParent(Context.current()).startSpan();
+
+		Context extractedContext = otel.getPropagators().getTextMapPropagator().extract(Context.current(), request,
+			HttpServletRequestTextMapGetter.INSTANCE);
+
+		log.info("current span {}", extractedContext);
 		log.info("headers : \n {}", headers);
+
 		ownerFactory.createDomain(1L);
+
 	}
 
 	@RequestMapping("/owners/testM2")
@@ -147,12 +154,13 @@ public class testController {
 			return carrier.getHeader(key);
 		}
 	}
+
 	@RequestMapping("/owners/get")
 	public ResponseEntity<OwnerDto> getOwner(@RequestParam(value = "ownerId", defaultValue = "000")
-	String ownerId, HttpServletResponse myRequest) throws Exception {
-		OpenTelemetry otel = initOpenTelemetry();
-		Tracer trace = otel.getTracerProvider().get("mine");
-		Span mySpan = trace.spanBuilder("haha").startSpan();
+	String ownerId, HttpServletResponse myRequest, HttpServletRequest request) throws Exception {
+		//OpenTelemetry otel = initOpenTelemetry();
+		//Tracer trace = otel.getTracerProvider().get("mine");
+		Span mySpan = tracer.spanBuilder("haha").startSpan();
 
 		OwnerDomain ownerDomain = null;
 		List<OwnerDomain> ownerDomainList = null;
@@ -162,7 +170,11 @@ public class testController {
 
 			// set tags
 			mySpan.setAttribute("firstSpan", "hahahaha");
-			mySpan.makeCurrent();
+			Context contextWith = Context.current().with(mySpan);
+			otel.getPropagators().getTextMapPropagator().inject(contextWith, myRequest,
+				HttpServletRequestTextMapSetter.INSTANCE);
+
+			//mySpan.makeCurrent();
 
 			//		final ExtendedTracer tracer = ExtendedTracer.create(otel.getTracer("mmyymymym"));
 			//		tracer.create(otel.getTracer("myTracer"));
@@ -178,6 +190,9 @@ public class testController {
 			//Span test = Span.current();f
 			//test.setAttribute("mymethod1 =>", "kkkkkkkkk");
 			//logger.info("current  span => {}", test);
+
+			log.info("controller myspan print =>> {} ", mySpan);
+
 			innerMicroRestTemplate.getForObject(LOCAL_URL + "/owners/testM1", String.class);
 
 			try {
@@ -198,16 +213,14 @@ public class testController {
 				resultDto = ownerDomain.getOwnerInformation();
 			}
 
+			// call testM2
+			innerMicroRestTemplate.getForObject(BASE_URL + "/owners/testM2", String.class);
 		} catch (Exception e) {
 			// TODO: handle exception
 		} finally {
 			log.info("mySpan end : \n{}", mySpan);
 			mySpan.end();
 		}
-
-		// call testM2
-		innerMicroRestTemplate.getForObject(BASE_URL + "/owners/testM2", String.class);
-
 		return new ResponseEntity<>(resultDto, HttpStatus.OK);
 	}
 
@@ -317,30 +330,4 @@ public class testController {
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
 	}
 
-	public OpenTelemetry initOpenTelemetry() throws Exception {
-		log.info("!!!!!!!!!!!!!! begin initOpenTelemetry initOpenTelemetry");
-		// Export traces to Jaeger over OTLP
-		// Span Exporter 생성
-
-		Resource serviceNameResource = Resource
-			.create(Attributes.of(ResourceAttributes.SERVICE_NAME, "my-otel-jaeger"));
-
-		// Set to process the spans by the Jaeger Exporter
-		SdkTracerProvider tracerProvider = SdkTracerProvider.builder()
-			.addSpanProcessor(SimpleSpanProcessor.create(otelHttpSpanExporter))
-			//			.addSpanProcessor((BatchSpanProcessor.builder(otelHttpSpanExporter).build()))
-			.setResource(Resource.getDefault().merge(serviceNameResource))
-			.build();
-
-		OpenTelemetrySdk openTelemetry = OpenTelemetrySdk.builder()
-			.setTracerProvider(tracerProvider)
-			.setPropagators(ContextPropagators.create(W3CTraceContextPropagator.getInstance()))
-			.build();
-
-		// it's always a good idea to shut down the SDK cleanly at JVM exit.
-		Runtime.getRuntime().addShutdownHook(new Thread(tracerProvider::close));
-
-		return openTelemetry;
-	}
 }
-

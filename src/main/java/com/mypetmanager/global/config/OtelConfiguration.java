@@ -4,19 +4,21 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.tracing.otlp.OtlpProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.common.Attributes;
+import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
-import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
+import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
 import io.opentelemetry.semconv.ResourceAttributes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @EnableConfigurationProperties(OtlpProperties.class)
 public class OtelConfiguration {
-
+	@Value("${otlp.tracing.endpoint}")
+	public String url;
 	//	private static final Logger log = LoggerFactory.getLogger(AppConfig.class);
 
 	//	@Bean
@@ -35,9 +38,24 @@ public class OtelConfiguration {
 	//			}
 
 	@Bean
+	@ConditionalOnMissingBean(Tracer.class)
+	public Tracer getTracer() throws Exception {
+		Tracer tracer;
+		// 현재의 span 가져오기
+		OpenTelemetry otel = initOpenTelemetry();
+		tracer = otel.getTracerProvider().get("mine");
+
+		if (tracer == null) {
+			throw new Exception("ttt");
+		}
+
+		log.warn("Tracer bean is not configured! Switching to " + tracer);
+		return tracer;
+	}
+
+	@Bean
 	//	OtlpHttpSpanExporter otlpHttpSpanExporter(OtlpProperties property) throws Exception {
-	OtlpHttpSpanExporter otlpHttpSpanExporter(@Value("${otlp.tracing.endpoint}")
-	String url, OtlpProperties property) throws Exception {
+	OtlpHttpSpanExporter otlpHttpSpanExporter() throws Exception {
 		if (url == null) {
 			throw new Exception("Url is null");
 		}
@@ -48,27 +66,21 @@ public class OtelConfiguration {
 			.build();
 	}
 
-	//	@Bean
-	//	public MyObservationHandler customObservationHandler(Tracer tracer) {
-	//		log.info("!!!!!!!!!!!!!! begin MyObservationHandler customObservationHandler");
-	//		return new MyObservationHandler(tracer);
-	//	}
-
-	public static OpenTelemetry initOpenTelemetry() throws Exception {
+	@Bean
+	public OpenTelemetry initOpenTelemetry() throws Exception {
 		log.info("!!!!!!!!!!!!!! begin initOpenTelemetry initOpenTelemetry");
 		// Export traces to Jaeger over OTLP
 		// Span Exporter 생성
 		OtlpHttpSpanExporter jaegerOtlpExporter = OtlpHttpSpanExporter.builder().build();
 
 		Resource serviceNameResource = Resource
-			.create(Attributes.of(ResourceAttributes.SERVICE_NAME, "otel-jaeger-example"));
+			.create(Attributes.of(ResourceAttributes.SERVICE_NAME, "otel-custom-jaeger"));
 
 		// Set to process the spans by the Jaeger Exporter
 		SdkTracerProvider tracerProvider = SdkTracerProvider.builder()
-			//			.addSpanProcessor(BatchSpanProcessor.builder(jaegerOtlpExporter).build())
-			//			.setResource(Resource.getDefault().merge(serviceNameResource))
-			//.addSpanProcessor(SimpleSpanProcessor.create(jaegerOtlpExporter))
-			.addSpanProcessor((BatchSpanProcessor.builder(jaegerOtlpExporter).build()))
+			//.addSpanProcessor(BatchSpanProcessor.builder(jaegerOtlpExporter).build())
+			.addSpanProcessor(SimpleSpanProcessor.create(otlpHttpSpanExporter()))
+			.setResource(Resource.getDefault().merge(serviceNameResource))
 			.build();
 		OpenTelemetrySdk openTelemetry = OpenTelemetrySdk.builder()
 			.setTracerProvider(tracerProvider)
@@ -80,6 +92,13 @@ public class OtelConfiguration {
 
 		return openTelemetry;
 	}
+
+	//	@Bean
+	//	public MyObservationHandler customObservationHandler(Tracer tracer) {
+	//		log.info("!!!!!!!!!!!!!! begin MyObservationHandler customObservationHandler");
+	//		return new MyObservationHandler(tracer);
+	//	}
+
 
 	//	@Bean
 	//    public OncePerRequestFilter traceContextFilter(Tracer tracer) {
@@ -148,16 +167,7 @@ public class OtelConfiguration {
 	// 	return new SpanAspect(methodInvocationProcessor);
 	// }
 
-	// @Bean
-	// MethodInvocationProcessor methodInvocationProcessor(NewSpanParser newSpanParser,
-	// 		Tracer tracer,
-	// 		BeanFactory beanFactory) {
-	// 	return new ImperativeMethodInvocationProcessor(
-	// 			newSpanParser,
-	// 			tracer,
-	// 			beanFactory::getBean,
-	// 			beanFactory::getBean);
-	// }
+
 
 	// @Bean
 	// NewSpanParser newSpanParser() {
