@@ -6,15 +6,24 @@ target/
 
 ### STS ###
 .apt_generated
+.apt_generated_tests
 .classpath
 .factorypath
 .project
 .settings
 .springBeans
 .sts4-cache
+.gradle
 # bin 폴더 및 lib 폴더의 모든 파일 제외
 bin/*
 lib/*
+/log/errorLog.log
+.apt_generated/*
+.gradle/*
+# file 제외
+*.log
+*.bin
+*.class
 
 ### IntelliJ IDEA ###
 .idea
