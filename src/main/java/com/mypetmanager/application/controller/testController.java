@@ -1,20 +1,17 @@
 package com.mypetmanager.application.controller;
 
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +20,6 @@ import org.springframework.web.client.RestTemplate;
 import com.mypetmanager.business.domain.owner.OwnerDomain;
 import com.mypetmanager.business.domain.owner.OwnerFactory;
 import com.mypetmanager.business.domain.owner.dto.OwnerDto;
-import com.mypetmanager.global.config.HttpConfig.HttpServletRequestTextMapSetter;
 import com.mypetmanager.integration.repository.owner.OwnerRepository;
 import com.mypetmanager.integration.repository.pet.PetRepository;
 import com.mypetmanager.integration.repository.pet.dto.PetResponseDto;
@@ -33,11 +29,9 @@ import io.micrometer.observation.ObservationRegistry;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.baggage.Baggage;
 import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.Tracer;
-import io.opentelemetry.context.Context;
-import io.opentelemetry.context.Scope;
 import io.opentelemetry.context.propagation.TextMapGetter;
 import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -55,15 +49,15 @@ public class testController {
 	// factory
 	final OwnerFactory ownerFactory;
 
-	final OpenTelemetry otel;
-	final OtlpHttpSpanExporter otelHttpSpanExporter;
+	private OpenTelemetry otel;
+	private OtlpHttpSpanExporter otelHttpSpanExporter;
 	//	private RestTemplate icroRestTemplate;
 	//	private ExtendedTracer tracer;
 
-	@Qualifier("innerMicroRestTemplate")
+	//	@Qualifier("innerMicroRestTemplate")
 	private RestTemplate innerMicroRestTemplate;
 
-	private Tracer tracer; // OpenTelemetry Tracer 주입
+	//	private Tracer tracer; // OpenTelemetry Tracer 주입
 
 	//	@Autowired
 	//	private TextMapPropagator propagator; // OpenTelemetry TextMapPropagator 주입
@@ -75,33 +69,45 @@ public class testController {
 	private final String BASE_URL = "http://localhost:9081";
 
 	@RequestMapping("/owners/testM1")
-	public void testMethod(HttpServletRequest request, @RequestHeader
-	HttpHeaders headers) throws Exception {
+	public void testMethod(HttpServletResponse response, HttpServletRequest request) throws Exception {
 		System.out.println("testM1");
-
+		log.trace("call testMethod1 :\n {}", request);
 		// 현재의 span 가져오기
 		//OpenTelemetry otel = initOpenTelemetry();
 		//Tracer trace = otel.getTracerProvider().get("mine");
 		//Span mySpan = tracer.spanBuilder("haha2").setParent(Context.current()).startSpan();
+		//Span mySpan = tracer.spanBuilder("testM1").startSpan();
 
-		Context extractedContext = otel.getPropagators().getTextMapPropagator().extract(Context.current(), request,
-			HttpServletRequestTextMapGetter.INSTANCE);
+		//		Context contextWith = Context.current().with(mySpan);
+		//		otel.getPropagators().getTextMapPropagator().inject(contextWith, response,
+		//			HttpServletRequestTextMapSetter.INSTANCE);
 
-		log.info("current span {}", extractedContext);
-		log.info("headers : \n {}", headers);
+		//Context extractedContext = otel.getPropagators().getTextMapPropagator().extract(Context.current(), request,
+		//HttpServletRequestTextMapGetter.INSTANCE);
+
+		//log.info("current span  extractedContext {}", extractedContext);
 
 		ownerFactory.createDomain(1L);
 
+		//mySpan.end();
+
 	}
 
+	@WithSpan(value = "span name")
 	@RequestMapping("/owners/testM2")
-	public void testMethod2(HttpServletRequest response) throws Exception {
-		log.trace("call testMethod2 : {}");
+	public void testMethod2(String ow, HttpServletResponse response, HttpServletRequest request) throws Exception {
+		log.trace("call testMethod2 :\n {}", request);
+
 		Span test = Span.current();
 		test.setAttribute("mymethod2 =>", "hahaha");
-		log.info("current  span => {}", test);
+		log.info("current testM2 span => {}", test);
 
-		Enumeration<String> temp = response.getHeaderNames();
+		//		Context extractedContext = otel.getPropagators().getTextMapPropagator().extract(Context.current(), request,
+		//			HttpServletRequestTextMapGetter.INSTANCE);
+
+		//		log.info("current span  extractedContext {}", Span.fromContext(extractedContext));
+
+		Enumeration<String> temp = request.getHeaderNames();
 
 		while (temp.hasMoreElements()) {
 			String headerName = temp.nextElement();
@@ -110,7 +116,7 @@ public class testController {
 			System.out.println(response.getHeader(headerName));
 		}
 
-		innerMicroRestTemplate.getForObject(LOCAL_URL + "/owners/testM1", String.class);
+		//innerMicroRestTemplate.getForObject(LOCAL_URL + "/owners/testM1", String.class);
 
 	}
 
@@ -138,41 +144,56 @@ public class testController {
 	//		}
 	//	}
 
-	public static class HttpServletRequestTextMapGetter implements TextMapGetter<HttpServletRequest> {
+	public static class HttpServletRequestTextMapGetter implements TextMapGetter<HttpServletResponse> {
 
 		public final static HttpServletRequestTextMapGetter INSTANCE = new HttpServletRequestTextMapGetter();
 
 		@Override
-		public Iterable<String> keys(HttpServletRequest carrier) {
-			return Collections.list(carrier.getHeaderNames());
+		@Nullable
+		public String get(@Nullable
+		HttpServletResponse carrier, String key) {
+			return carrier.getHeader(key);
 		}
 
-		@Nullable
 		@Override
-		public String get(@Nullable
-		HttpServletRequest carrier, String key) {
-			return carrier.getHeader(key);
+		public Iterable<String> keys(HttpServletResponse carrier) {
+			// TODO Auto-generated method stub
+			return carrier.getHeaderNames();
+		}
+	}
+
+	static class AkkaHttpHeaders {
+		private HttpRequest request;
+
+		public AkkaHttpHeaders(HttpRequest request) {
+			this.request = request;
+		}
+
+		public HttpRequest getRequest() {
+			return request;
+		}
+
+		public void setRequest(HttpRequest request) {
+			this.request = request;
 		}
 	}
 
 	@RequestMapping("/owners/get")
 	public ResponseEntity<OwnerDto> getOwner(@RequestParam(value = "ownerId", defaultValue = "000")
-	String ownerId, HttpServletResponse myRequest, HttpServletRequest request) throws Exception {
-		//OpenTelemetry otel = initOpenTelemetry();
-		//Tracer trace = otel.getTracerProvider().get("mine");
-		Span mySpan = tracer.spanBuilder("haha").startSpan();
+	String ownerId, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
 		OwnerDomain ownerDomain = null;
 		List<OwnerDomain> ownerDomainList = null;
 		OwnerDto resultDto = null;
 
-		try (Scope ignored = mySpan.makeCurrent()) {
+		//try (Scope ignored = mySpan.makeCurrent()) {
 
 			// set tags
-			mySpan.setAttribute("firstSpan", "hahahaha");
-			Context contextWith = Context.current().with(mySpan);
-			otel.getPropagators().getTextMapPropagator().inject(contextWith, myRequest,
-				HttpServletRequestTextMapSetter.INSTANCE);
+			//			mySpan.setAttribute("firstSpan", "hahahaha");
+			//			myRequest.setHeader("mineHeader1", "kkkkkkkkkkkkkkkk");
+			//			Context contextWith = Context.current().with(mySpan);
+			//			otel.getPropagators().getTextMapPropagator().inject(contextWith, myRequest,
+			//				HttpServletRequestTextMapSetter.INSTANCE);
 
 			//mySpan.makeCurrent();
 
@@ -191,9 +212,9 @@ public class testController {
 			//test.setAttribute("mymethod1 =>", "kkkkkkkkk");
 			//logger.info("current  span => {}", test);
 
-			log.info("controller myspan print =>> {} ", mySpan);
+			//log.info("controller myspan print =>> {} ", mySpan);
 
-			innerMicroRestTemplate.getForObject(LOCAL_URL + "/owners/testM1", String.class);
+			//innerMicroRestTemplate.getForObject(LOCAL_URL + "/owners/testM1", String.class);
 
 			try {
 				ownerDomain = ownerFactory.createDomain(1L);
@@ -213,14 +234,20 @@ public class testController {
 				resultDto = ownerDomain.getOwnerInformation();
 			}
 
+			//			AkkaHttpHeaders akHeader = new AkkaHttpHeaders(hRequest);
+
+			//			otel.getPropagators().getTextMapPropagator().inject(Context.current(), headers,
+			//				MyHttpSetter.INSTANCE);
+
 			// call testM2
+			innerMicroRestTemplate.getForObject(LOCAL_URL + "/owners/testM2", String.class);
 			innerMicroRestTemplate.getForObject(BASE_URL + "/owners/testM2", String.class);
-		} catch (Exception e) {
-			// TODO: handle exception
-		} finally {
-			log.info("mySpan end : \n{}", mySpan);
-			mySpan.end();
-		}
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		} finally {
+//			log.info("mySpan end : \n{}", mySpan);
+//			mySpan.end();
+//		}
 		return new ResponseEntity<>(resultDto, HttpStatus.OK);
 	}
 

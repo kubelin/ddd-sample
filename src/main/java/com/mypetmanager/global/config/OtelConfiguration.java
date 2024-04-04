@@ -4,14 +4,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.tracing.otlp.OtlpProperties;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.common.Attributes;
-import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter;
@@ -37,21 +35,21 @@ public class OtelConfiguration {
 	//				return new ObservedAspect(observationRegistry);
 	//			}
 
-	@Bean
-	@ConditionalOnMissingBean(Tracer.class)
-	public Tracer getTracer() throws Exception {
-		Tracer tracer;
-		// 현재의 span 가져오기
-		OpenTelemetry otel = initOpenTelemetry();
-		tracer = otel.getTracerProvider().get("mine");
-
-		if (tracer == null) {
-			throw new Exception("ttt");
-		}
-
-		log.warn("Tracer bean is not configured! Switching to " + tracer);
-		return tracer;
-	}
+	//	@Bean
+	//	@ConditionalOnMissingBean(Tracer.class)
+	//	public Tracer getTracer() throws Exception {
+	//		Tracer tracer;
+	//		// 현재의 span 가져오기
+	//		OpenTelemetry otel = initOpenTelemetry();
+	//		tracer = otel.getTracerProvider().get("mine");
+	//
+	//		if (tracer == null) {
+	//			throw new Exception("ttt");
+	//		}
+	//
+	//		log.warn("Tracer bean is not configured! Switching to " + tracer);
+	//		return tracer;
+	//	}
 
 	@Bean
 	//	OtlpHttpSpanExporter otlpHttpSpanExporter(OtlpProperties property) throws Exception {

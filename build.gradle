@@ -80,6 +80,7 @@ dependencies {
     //implementation 'io.micrometer:micrometer-tracing-bridge-otel'
     implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
     
+    implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.1.0')
     implementation("io.opentelemetry:opentelemetry-api")
     implementation("io.opentelemetry:opentelemetry-sdk")
     implementation("io.opentelemetry:opentelemetry-exporter-logging")
@@ -88,23 +89,7 @@ dependencies {
     implementation("io.opentelemetry.semconv:opentelemetry-semconv")
   	//runtimeOnly 'io.micrometer:micrometer-registry-otlp'
 	
-  //
-  //implementation("io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter")
-    // implementation("io.opentelemetry:opentelemetry-api:1.34.1");
-    //implementation("io.opentelemetry:opentelemetry-sdk:1.34.1");
-     //implementation("io.opentelemetry:opentelemetry-exporter-logging:1.34.1");
-    //implementation("io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.34.1");
-    //implementation("io.opentelemetry.instrumentation:opentelemetry-java-http-client:2.0.0-alpha");
-//  implementation 'io.micrometer:micrometer-tracing'
-//	implementation "io.micrometer:micrometer-tracing-bridge-otel"
-//	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
-//  implementation "io.opentelemetry:opentelemetry-exporter-otlp"
-	//implementation("io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter")
-	//implementation(platform("io.opentelemetry:opentelemetry-bom:1.34.1"))
-    //implementation(platform("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom-alpha:2.0.0-alpha"))
-	//implementation("io.opentelemetry.instrumentation:opentelemetry-jdbc")
-	
-	//httpClient
+ 	//httpClient
   implementation 'org.apache.httpcomponents.client5:httpclient5'
 	implementation 'com.google.protobuf:protobuf-java'
 	
@@ -120,14 +105,6 @@ dependencies {
 
 publishing {
   repositories {
-        //maven {
-          //  url = uri('http://localhost:8082/artifactory/my-local-repo/') // Artifactory의 로컬 리포지토리 URL
-          //  allowInsecureProtocol = true
-          //  credentials {
-          //      username = "admin"
-          //      password = "Malife#2"
-          //  }
-        //}
          maven {
             name = "testRepo"
             credentials {
@@ -135,7 +112,6 @@ publishing {
                   password = "Malife#2"
               }
             url = uri('http://localhost:8082/artifactory/my-local-repos/')
-              //url = layout.buildDirectory.dir("publishing-repository")
             allowInsecureProtocol true
         }
         

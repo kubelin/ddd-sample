@@ -26,7 +26,12 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/%d{yyyy-MM, aux}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <totalSizeCap>20GB</totalSizeCap>
+            <!-- 파일당 최대 크기 -->
+    			<maxFileSize>5MB</maxFileSize>            
+            <!-- 최대 롤링 파일 수 -->
+    			<maxHistory>20</maxHistory>
+    			<!-- 모든 롤링 파일의 전체 크기 상한 -->
+    			<totalSizeCap>100MB</totalSizeCap>
         </rollingPolicy>
 
     </appender>
