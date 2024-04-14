@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="60 seconds">
     <property name="LOG_PATH" value="log"/>
     <property name="LOG_FILE_NAME" value="errorLog"/>
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [traceId=%X{traceId}] [%thread] [%logger{40}] - %msg%n"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [traceId=%X{traceId} spanId=%X{spanId:-}] [%thread] [%logger{40}] - %msg%n"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -26,13 +26,13 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/%d{yyyy-MM, aux}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <totalSizeCap>20GB</totalSizeCap>
+            <totalSizeCap>20MB</totalSizeCap>
         </rollingPolicy>
 
     </appender>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
+        <!-- <appender-ref ref="FILE"/> -->
     </root>
 </configuration>
