@@ -16,6 +16,9 @@ target/
 bin/*
 lib/*
 
+*.log
+*.class
+*.bin
 ### IntelliJ IDEA ###
 .idea
 *.iws
