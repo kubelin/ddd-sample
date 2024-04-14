@@ -9,14 +9,13 @@ import lombok.Getter;
 
 @Getter
 public class PetDomain {
-	
 	private Long petId;
-    private Owner owner;
-    private String petName;
-    private Date petBirthDate;
-    private String petType;
-    private String breed;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+	private Owner owner;
+	private String petName;
+	private Date petBirthDate;
+	private String petType;
+	private String breed;
+	private Timestamp createdAt;
+	private Timestamp updatedAt;
 
 }

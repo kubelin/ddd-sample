@@ -10,12 +10,12 @@ import lombok.Data;
 @Data
 public class PetDto {
 	private Long petId;
-    private Owner owner;
-    private String petName;
-    private Date petBirthDate;
-    private String petType;
-    private String breed;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+	private Owner owner;
+	private String petName;
+	private Date petBirthDate;
+	private String petType;
+	private String breed;
+	private Timestamp createdAt;
+	private Timestamp updatedAt;
 
 }

@@ -91,6 +91,7 @@ public class OtelConfiguration {
 		return openTelemetry;
 	}
 
+
 	//	@Bean
 	//	public MyObservationHandler customObservationHandler(Tracer tracer) {
 	//		log.info("!!!!!!!!!!!!!! begin MyObservationHandler customObservationHandler");

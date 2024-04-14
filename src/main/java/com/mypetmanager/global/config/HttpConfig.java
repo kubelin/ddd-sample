@@ -1,6 +1,5 @@
 package com.mypetmanager.global.config;
 
-import java.util.Collections;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -8,7 +7,7 @@ import javax.annotation.Nullable;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.apache.hc.core5.http.HttpRequest;
 import org.apache.hc.core5.util.Timeout;
@@ -35,9 +34,10 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @AllArgsConstructor
 public class HttpConfig {
-	// Observability
-	//	OpenTelemetry otel;
-	//	Context context;
+	// connection option
+	Long connectionTimeout = 60L;
+	Long responseTimeout = 60L;
+
 	private static final ContextKey<String> ANIMAL = ContextKey.named("animal");
 	private static final ContextKey<Object> BAG = ContextKey.named("bag");
 
@@ -47,7 +47,7 @@ public class HttpConfig {
 
 	@Bean
 	public HttpClientConnectionManager httpClientConnectionManager() {
-		return new BasicHttpClientConnectionManager();
+		return PoolingHttpClientConnectionManagerBuilder.create().setMaxConnPerRoute(10).setMaxConnTotal(10).build();
 	}
 
 	@Bean(name = "innerHttpComponentsClientHttpRequestFactory")
@@ -171,21 +171,30 @@ public class HttpConfig {
 
 	}
 
-	public static class HttpServletRequestTextMapGetter implements TextMapGetter<HttpServletRequest> {
+	@Bean(name = "innerMicroRestTemplate")
+	public RestTemplate innerMicroRestTemplate(
+		@Qualifier("innerHttpComponentsClientHttpRequestFactory")
+		ClientHttpRequestFactory requestFactory) {
+		return new RestTemplate(requestFactory);
+	}
+
+	public static class HttpServletRequestTextMapGetter implements TextMapGetter<HttpServletResponse> {
 
 		public final static HttpServletRequestTextMapGetter INSTANCE = new HttpServletRequestTextMapGetter();
 
 		@Override
-		public Iterable<String> keys(HttpServletRequest carrier) {
-			return Collections.list(carrier.getHeaderNames());
-		}
-
 		@Nullable
-		@Override
 		public String get(@Nullable
-		HttpServletRequest carrier, String key) {
+		HttpServletResponse carrier, String key) {
 			return carrier.getHeader(key);
 		}
+
+		@Override
+		public Iterable<String> keys(HttpServletResponse carrier) {
+			// TODO Auto-generated method stub
+			return carrier.getHeaderNames();
+		}
+
 	}
 
 	public static class HttpServletRequestTextMapSetter2 implements TextMapSetter<HttpRequest> {
@@ -302,12 +311,6 @@ public class HttpConfig {
 		}
 	}
 
-	@Bean(name = "innerMicroRestTemplate")
-	public RestTemplate innerMicroRestTemplate(@Qualifier("innerHttpComponentsClientHttpRequestFactory")
-	ClientHttpRequestFactory requestFactory) {
-		System.out.println("언제?? innerMicroRestTemplate");
-		return new RestTemplate(requestFactory);
-	}
 
 	//	TextMapGetter<HttpHeaders> getter = new TextMapGetter<HttpHeaders>() {
 	//		@Override

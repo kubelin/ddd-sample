@@ -18,39 +18,35 @@ import lombok.Getter;
 @RootDomain("OwnerDomain")
 @Getter
 @Component
-public class OwnerDomain extends OwnerRootDomain{
-	public enum OwnerStatus{
+public class OwnerDomain extends OwnerRootDomain {
+	public enum OwnerStatus {
 		HAS_PET, NO_PET
 	}
+
 	@Enumerated(EnumType.STRING)
 	private OwnerStatus status;
-	
+
 	private OwnerVO owerVo;
-	
 	private Long ownerId;
-	
 	private OwnerDto ownerDto;
 	private MembershipDto membershipDto;
 	private PaymentDto paymentDto;
-	
-	
 	private Pet pet;
-	
+
 	public OwnerVO getMasterOwnerVO(Long ownerId) throws Exception {
 		return super.getOwnerRepo().masterOwnerVO(ownerId);
 	}
-	
+
 	public void setRepo() {
 		super.setOwnerRepo();
 	}
-	
+
 	public void getPetList() {
 		System.out.println("get pet~");
 	}
-	
-	public void setMembership(Long memberId) {
-	}
-	
+
+	public void setMembership(Long memberId) {}
+
 	public void setOwnerInfomation(Long ownerId) {
 		try {
 			super.getOwnerRepo().getOwner(ownerId);
@@ -63,7 +59,5 @@ public class OwnerDomain extends OwnerRootDomain{
 		OwnerDto resultDto = EntityMapper.INSTANCE.convertToOwnerDto(this);
 		return resultDto;
 	}
-	
-	
-	
+
 }

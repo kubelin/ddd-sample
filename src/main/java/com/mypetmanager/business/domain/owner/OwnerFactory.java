@@ -40,12 +40,12 @@ public class OwnerFactory {
 		OwnerVO ownerVo;
 
 		//ownerVo = ownerRpeo.masterOwnerVO(ownerId);
-//		loadAnnotatedClassz(ownerDomain, ownerId);
+		//		loadAnnotatedClassz(ownerDomain, ownerId);
 		//Owner ow = new Owner();
 		getEntities(Owner.class);
-//		ownerDomain = EntityMapper.INSTANCE.convertToOwnerDomain(ownerVo);
+		//		ownerDomain = EntityMapper.INSTANCE.convertToOwnerDomain(ownerVo);
 
-//		return ownerDomain;
+		//		return ownerDomain;
 		return ownerDomain;
 	}
 
@@ -66,7 +66,7 @@ public class OwnerFactory {
 		Set<BeanDefinition> beanDefs = provider.findCandidateComponents("com.mypetmanager.integration.repository");
 
 		beanDefs.forEach(beanDefinition -> {
-			AnnotatedBeanDefinition annoBean = (AnnotatedBeanDefinition) beanDefinition;
+			AnnotatedBeanDefinition annoBean = (AnnotatedBeanDefinition)beanDefinition;
 			AnnotationMetadata meta = annoBean.getMetadata();
 
 			var tempMap = meta.getAnnotationAttributes(SubDomain.class.getName());
@@ -76,28 +76,27 @@ public class OwnerFactory {
 					var tempClass = Class.forName(beanDefinition.getBeanClassName());
 					entityManager.find(tempClass, ownerId);
 
-//					ownerDomain.setOwnerDto(null);
-//					ownerDomain.setPaymentDto(null);
-//					ownerDomain.setMembershipDto(null);
+					//					ownerDomain.setOwnerDto(null);
+					//					ownerDomain.setPaymentDto(null);
+					//					ownerDomain.setMembershipDto(null);
 
 				} catch (ClassNotFoundException e) {
 					// raise Exception
 					e.printStackTrace();
 				}
 
-
 			}
 		});
 	}
 
-	public List<Object> getEntities(Object entityClass){
-		System.out.println(" result = " );
-//		Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
-//
-//		for (EntityType<?> entityType : entities) {
-//		    String entityName = entityType.getName();
-//		    System.out.println("Entity Name: " + entityName);
-//		}
+	public List<Object> getEntities(Object entityClass) {
+		System.out.println(" result = ");
+		//		Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
+		//
+		//		for (EntityType<?> entityType : entities) {
+		//		    String entityName = entityType.getName();
+		//		    System.out.println("Entity Name: " + entityName);
+		//		}
 		return null;
 	}
 

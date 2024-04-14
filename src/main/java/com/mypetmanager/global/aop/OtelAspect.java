@@ -11,8 +11,8 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.mypetmanager.application.controller.testController.HttpServletRequestTextMapGetter;
 import com.mypetmanager.business.domain.owner.dto.OwnerDto;
+import com.mypetmanager.global.config.HttpConfig.HttpServletRequestTextMapGetter;
 import com.mypetmanager.global.config.HttpConfig.HttpServletRequestTextMapSetter;
 
 import io.opentelemetry.api.OpenTelemetry;
@@ -51,8 +51,6 @@ public class OtelAspect {
 			log.info("mySpan\n {}", mySpan);
 			log.info("mySpan.getSpanContext().getTraceId() =>> {} ", mySpan.getSpanContext().getTraceId());
 			response.setHeader("mine1", "1111111");
-			response.setHeader("mine2", "2222");
-			response.setHeader("mine3", "3333");
 			response.setHeader("mySpan", mySpan.getSpanContext().getTraceId());
 
 			otel.getPropagators().getTextMapPropagator().inject(contextWith, response,
@@ -65,7 +63,6 @@ public class OtelAspect {
 		log.info("current Span \n {}", Span.fromContext(contextWith));
 		System.out.println("end of beforeCallController");
 		mySpan.end();
-
 
 	}
 
@@ -101,7 +98,6 @@ public class OtelAspect {
 			log.info("is span alive?  \n {}", asSpan);
 			log.info("span Recording?  \n {}", asSpan.isRecording());
 			asSpan.setAttribute("myspan?", "alvie?");
-
 
 		}
 
