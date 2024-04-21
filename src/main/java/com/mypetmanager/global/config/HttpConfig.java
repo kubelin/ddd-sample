@@ -35,15 +35,12 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class HttpConfig {
 	// connection option
-	Long connectionTimeout = 60L;
-	Long responseTimeout = 60L;
-
+	//	private Long connectionTimeout;
+	//	private Long responseTimeout;
 	private static final ContextKey<String> ANIMAL = ContextKey.named("animal");
 	private static final ContextKey<Object> BAG = ContextKey.named("bag");
 
 	private static final Context CAT = Context.current().with(ANIMAL, "cat");
-	//	private final OpenTelemetry otel;
-	//	private final Tracer tracer;
 
 	@Bean
 	public HttpClientConnectionManager httpClientConnectionManager() {

@@ -3,11 +3,13 @@ package com.mypetmanager.business.domain.pet;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+import com.mypetmanager.global.annotation.domain.SubDomain;
 import com.mypetmanager.integration.repository.owner.entity.Owner;
 
 import lombok.Getter;
 
 @Getter
+@SubDomain("PetDomain")
 public class PetDomain {
 	private Long petId;
 	private Owner owner;

@@ -11,7 +11,7 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.mypetmanager.business.domain.owner.dto.OwnerDto;
+import com.mypetmanager.business.domain.owner.dto.OwnerDTO;
 import com.mypetmanager.global.config.HttpConfig.HttpServletRequestTextMapGetter;
 import com.mypetmanager.global.config.HttpConfig.HttpServletRequestTextMapSetter;
 
@@ -75,7 +75,7 @@ public class OtelAspect {
 	@AfterReturning(value = "execution(* com.mypetmanager.application.controller..*.*(..)) && args(ownerId, response, request)", returning = "responseEntity")
 	public void writeSuccessLog(JoinPoint jointPoint, String ownerId, HttpServletResponse response,
 		HttpServletRequest request,
-		ResponseEntity<OwnerDto> responseEntity) throws RuntimeException {
+		ResponseEntity<OwnerDTO> responseEntity) throws RuntimeException {
 		//logging
 		Map<String, String> map = new HashMap<>();
 		//returnValue 는 해당 메서드의 리턴객체를 그대로 가져올 수 있다.

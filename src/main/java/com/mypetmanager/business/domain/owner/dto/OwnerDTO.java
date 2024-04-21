@@ -2,14 +2,13 @@ package com.mypetmanager.business.domain.owner.dto;
 
 import java.sql.Timestamp;
 
-import com.mypetmanager.global.annotation.domain.ValueObject;
-
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
-@ValueObject
 @Getter
-public class OwnerDto {
+@Setter
+public class OwnerDTO {
 	private Long ownerId;
 	private String name;
 	private String birthDate;
@@ -20,11 +19,11 @@ public class OwnerDto {
 	private Timestamp updatedAt;
 
 
-	public OwnerDto() {
+	public OwnerDTO() {
 	}
 
 	@Builder
-	public OwnerDto(Long ownerId, String name, String birthDate, String email, String phoneNumber, String address,
+	public OwnerDTO(Long ownerId, String name, String birthDate, String email, String phoneNumber, String address,
 			Timestamp createdAt, Timestamp updatedAt, MembershipDto membershipDto) {
 		super();
 		this.ownerId = ownerId;
@@ -37,14 +36,11 @@ public class OwnerDto {
 		this.updatedAt = updatedAt;
 	}
 
-
 	@Override
 	public String toString() {
-		return "OwnerVO [ownerId=" + ownerId + ", name=" + name + ", birthDate=" + birthDate + ", email=" + email
-				+ ", phoneNumber=" + phoneNumber + ", address=" + address + ", createdAt=" + createdAt + ", updatedAt="
-				+ updatedAt + ", membershipDto=" + "]";
+		return "OwnerDTO [ownerId=" + ownerId + ", name=" + name + ", birthDate=" + birthDate + ", email=" + email
+			+ ", phoneNumber=" + phoneNumber + ", address=" + address + ", createdAt=" + createdAt + ", updatedAt="
+			+ updatedAt + "]";
 	}
-
-
 
 }

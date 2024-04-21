@@ -46,13 +46,6 @@ public class OwnerVO {
 		this.membershipDto = membership;
 	}
 	
-	
-//	
-//	public void setMembershipDto(MembershipDTO memberDto) {
-//		this.membershipDto = memberDto;
-//		this.membershipDto.setMemberDetail(memberDto.getMemberDetail());
-//	}
-
 	@Override
 	public String toString() {
 		return "OwnerVO [ownerId=" + ownerId + ", name=" + name + ", birthDate=" + birthDate + ", email=" + email

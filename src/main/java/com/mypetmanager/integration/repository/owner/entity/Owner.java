@@ -10,14 +10,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.Setter;
 
 @SubDomain("OwnerDomain")
 @Entity
 @Getter
+@Setter
 @Table(name = "owner")
 public class Owner {
-	
-    @Id    
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "owner_id")
     private Long ownerId;
@@ -44,7 +46,7 @@ public class Owner {
     private Timestamp updatedAt;
 
     public void setOnlyName() {
-    	
+
     }
 
 	@Override
@@ -53,7 +55,7 @@ public class Owner {
 				+ ", phoneNumber=" + phoneNumber + ", address=" + address + ", createdAt=" + createdAt + ", updatedAt="
 				+ updatedAt + "]";
 	}
-    
-    
-    
+
+
+
 }

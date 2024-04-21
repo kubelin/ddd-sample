@@ -1,28 +1,43 @@
 package com.mypetmanager.application.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mypetmanager.application.service.SampleService;
+import com.mypetmanager.application.dto.OwnerRequestVO;
+import com.mypetmanager.application.service.PetShopService;
+import com.mypetmanager.global.application.dto.ApiResponseEntity;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
-public class SampleController {
+public class PetShopController {
 	// service
-	private SampleService sampleService;
+	private PetShopService petshopService;
 
-	@RequestMapping("v1/owners/testM1")
-	public void saveOwner(HttpServletResponse response, HttpServletRequest request) throws Exception {
-		log.trace("==== begin saveOwner ===");
+	@GetMapping("v1/owners/{ownerId}")
+	public ApiResponseEntity<String> findOwner(@PathVariable
+	Long ownerId) throws Exception {
 
-		sampleService.saveOwner();
-		//mySpan.end();
+		log.info("==== begin findOwner ===", ownerId);
+
+		petshopService.findOwner(ownerId);
+		return new ApiResponseEntity<String>();
+	}
+
+	@PostMapping("v1/owner/apply")
+	public ApiResponseEntity<String> saveOwner(@RequestBody
+	OwnerRequestVO requestDTO) throws Exception {
+
+		log.info("==== begin saveOwner ===", requestDTO);
+
+		petshopService.saveOwner(requestDTO);
+		return new ApiResponseEntity<String>();
 	}
 
 	//

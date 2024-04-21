@@ -7,9 +7,9 @@ import lombok.Getter;
 
 @Getter
 public class ErrorResponseEntity {
+
 	private String code;
 	private String message;
-
 
 	public static ResponseEntity<ErrorResponseEntity> toResponseEntity(String code, String message,
 		org.springframework.http.HttpStatus status) {
