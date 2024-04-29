@@ -1,6 +1,5 @@
 package com.mypetmanager.global.application.dto;
 
-import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import lombok.Builder;
