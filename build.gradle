@@ -65,9 +65,9 @@ dependencies {
   annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
   annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
     
-   // lombok
-   compileOnly 'org.projectlombok:lombok:1.18.30'
-   annotationProcessor 'org.projectlombok:lombok:1.18.30'
+  // lombok
+  compileOnly 'org.projectlombok:lombok:1.18.30'
+  annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
    // modelMapping mapstruct
    implementation 'org.modelmapper:modelmapper:3.2.0'

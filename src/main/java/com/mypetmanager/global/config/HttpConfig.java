@@ -308,7 +308,6 @@ public class HttpConfig {
 		}
 	}
 
-
 	//	TextMapGetter<HttpHeaders> getter = new TextMapGetter<HttpHeaders>() {
 	//		@Override
 	//		public String get(HttpHeaders headers, String s) {
