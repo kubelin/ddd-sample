@@ -1,5 +1,6 @@
 package com.mypetmanager.application.service;
 
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.mypetmanager.application.dto.OwnerRequestVO;
@@ -15,6 +16,8 @@ import lombok.AllArgsConstructor;
 public class OwnerServiceImpl implements PetShopService {
 	// factory
 	final OwnerFactory ownerFactory;
+
+	private SqlSessionTemplate temp;
 
 	@Override
 	@Transactional

@@ -49,14 +49,24 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'mysql:mysql-connector-java:8.0.23'
-	implementation 'org.apache.commons:commons-lang3' 
-	implementation 'io.hypersistence:hypersistence-utils-hibernate-60:3.0.1'
 	
+	// jsp
+  implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:2.0.0'
+  implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'	
+  compileOnly 'org.apache.tomcat.embed:tomcat-embed-jasper'  
+	
+	// MySQL Connector
+  implementation 'mysql:mysql-connector-java:8.0.23'
+  // Apache Commons Lang
+  implementation 'org.apache.commons:commons-lang3'
+  // Hypersistence Utils
+  implementation 'io.hypersistence:hypersistence-utils-hibernate-60:3.0.1'
+  // MyBatis Spring Boot Starter
+  implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
+  
 	// AOP
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
-	
-	// reflection
+  // reflection
 	implementation 'org.reflections:reflections:0.10.2'
 	
 	// queryDsl
@@ -69,25 +79,25 @@ dependencies {
   compileOnly 'org.projectlombok:lombok:1.18.30'
   annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
-   // modelMapping mapstruct
-   implementation 'org.modelmapper:modelmapper:3.2.0'
-   implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-   annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+  // modelMapping mapstruct
+  implementation 'org.modelmapper:modelmapper:3.2.0'
+  implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+  annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 	
 	// tracing
-    //	implementation 'io.opentelemetry:opentelemetry-sdk-common'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    //implementation 'io.micrometer:micrometer-tracing-bridge-otel'
-    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+  //	implementation 'io.opentelemetry:opentelemetry-sdk-common'
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  //implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+  implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+  
+  implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.1.0')
+  implementation("io.opentelemetry:opentelemetry-api")
+  implementation("io.opentelemetry:opentelemetry-sdk")
+  implementation("io.opentelemetry:opentelemetry-exporter-logging")
     
-    implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.1.0')
-    implementation("io.opentelemetry:opentelemetry-api")
-    implementation("io.opentelemetry:opentelemetry-sdk")
-    implementation("io.opentelemetry:opentelemetry-exporter-logging")
-    
-    //alpha modules
-    implementation("io.opentelemetry.semconv:opentelemetry-semconv")
-  	//runtimeOnly 'io.micrometer:micrometer-registry-otlp'
+  //alpha modules
+  implementation("io.opentelemetry.semconv:opentelemetry-semconv")
+  //runtimeOnly 'io.micrometer:micrometer-registry-otlp'
 	
  	//httpClient
   implementation 'org.apache.httpcomponents.client5:httpclient5'
@@ -162,6 +172,11 @@ publishing {
 //        }
 //    }
 //}
+
+// JAR로 빌드할 경우 아래 설정을 사용하세요 (WAR 대신)
+bootJar {
+     classpath configurations.compileClasspath
+}
 
 // Querydsl 설정부
 def querydslDir = ".apt_generated"

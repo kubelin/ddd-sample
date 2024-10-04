@@ -2,6 +2,7 @@ package com.mypetmanager.business.domain.owner;
 
 import java.util.HashMap;
 
+import org.springframework.boot.actuate.autoconfigure.tracing.TracingProperties.Baggage.Correlation;
 import org.springframework.stereotype.Component;
 
 import com.mypetmanager.application.dto.OwnerRequestVO;
@@ -28,6 +29,8 @@ public class OwnerDomain extends OwnerRootDomain {
 	public enum OwnerStatus {
 		HAS_PET, NO_PET
 	}
+
+	Correlation tt = new Correlation();
 
 	@Enumerated(EnumType.STRING)
 	private OwnerStatus status;
