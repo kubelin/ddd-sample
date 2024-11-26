@@ -4,8 +4,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.mypetmanager.global.common.SessionCheckInterceptor;
-
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
@@ -17,8 +15,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 */
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new SessionCheckInterceptor())
-			.addPathPatterns("/**") // 모든 경로 포함
+		//		registry.addInterceptor(new SessionCheckInterceptor())
+		//			.addPathPatterns("/**") // 모든 경로 포함
 		//.excludePathPatterns("/employee/search") // 제외 경로
 		;
 	}

@@ -1,4 +1,4 @@
-package com.mypetmanager.global.application.dto;
+package com.mypetmanager.global.integration;
 
 import org.springframework.http.ResponseEntity;
 

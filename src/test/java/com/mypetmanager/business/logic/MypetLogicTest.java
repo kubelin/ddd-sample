@@ -8,6 +8,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+/**
+ * com.mypetmanager.business.logic
+ * <p>
+ * MyPetLogicTest
+ * description : MyPetLogicTest
+ *
+ * @author 	kubel
+ * @version
+ * @since 	2024. 8. 18.
+ *
+ * <pre>
+ * [ history of modify ]
+ *      수정일        수정자           수정내용
+ *  ----------    -----------    ---------------------------
+ *  2024. 8. 18.     kubel 		   수정내용작성
+ * </pre>
+ *
+ */
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @DisplayName("MypetLogicTest")

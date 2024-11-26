@@ -7,32 +7,40 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mypetmanager.application.dto.OwnerRequestVO;
+import com.mypetmanager.application.dto.OwnerResponseVO;
 import com.mypetmanager.application.service.PetShopService;
-import com.mypetmanager.global.application.dto.ApiResponseEntity;
+import com.mypetmanager.global.integration.ApiResponseEntity;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
-public class PetShopController {
+public class SampleController01 {
 	// service
 	private PetShopService petshopService;
 
 	@GetMapping("v1/owners/{ownerId}")
 	public ApiResponseEntity<String> findOwner(@PathVariable
-	Long ownerId) throws Exception {
+	Long ownerId, HttpServletRequest response) throws Exception {
 
-		log.info("==== begin findOwner ===", ownerId);
+		log.info("==== begin findOwner ===> {} ", ownerId);
+		//		response.?
 
-		petshopService.findOwner(ownerId);
+		OwnerResponseVO tempVo = petshopService.findOwner(ownerId);
+
+		log.info("==== show findOwner ===> {} ", tempVo);
+
 		return new ApiResponseEntity<String>();
 	}
 
+
 	@PostMapping("v1/owner/apply")
 	public ApiResponseEntity<String> saveOwner(@RequestBody
-	OwnerRequestVO requestDTO) throws Exception {
+	OwnerRequestVO requestDTO)
+		throws Exception {
 
 		log.info("==== begin saveOwner ===", requestDTO);
 

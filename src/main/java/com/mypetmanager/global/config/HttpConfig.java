@@ -59,6 +59,7 @@ public class HttpConfig {
 		HttpClient httpClient = HttpClientBuilder.create()
 			.setDefaultRequestConfig(requestConfig)
 			.setConnectionManager(connectionManager)
+			.setDefaultHeaders(null)
 			//			.addRequestInterceptorFirst((HttpRequestInterceptor)(request, entity, context) -> {
 			//
 			//				//				System.out.println("Context : {}" Context.current);
@@ -307,30 +308,5 @@ public class HttpConfig {
 			return null;
 		}
 	}
-
-	//	TextMapGetter<HttpHeaders> getter = new TextMapGetter<HttpHeaders>() {
-	//		@Override
-	//		public String get(HttpHeaders headers, String s) {
-	//			assert headers != null;
-	//			return headers.getHeaderString(s);
-	//		}
-	//
-	//		@Override
-	//		public Iterable<String> keys(HttpHeaders headers) {
-	//			List<String> keys = new ArrayList<>();
-	//			MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
-	//			requestHeaders.forEach((k, v) -> {
-	//				keys.add(k);
-	//			});
-	//		}
-	//	};
-
-	//	TextMapSetter<HttpURLConnection> setter = new TextMapSetter<HttpURLConnection>() {
-	//		@Override
-	//		public void set(HttpURLConnection carrier, String key, String value) {
-	//			// Insert the context as Header
-	//			carrier.setRequestProperty(key, value);
-	//		}
-	//	};
 
 }

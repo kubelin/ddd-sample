@@ -35,7 +35,8 @@ public class OwnerServiceImpl implements PetShopService {
 
 		// doamin 생성
 		OwnerDomain ownerDomain = ownerFactory.createDomain(ownerId);
-
+		OwnerResponseVO ownerResponseVO;
+		//		ownerResponseVO = ownerDomain.;
 		return null;
 	}
 

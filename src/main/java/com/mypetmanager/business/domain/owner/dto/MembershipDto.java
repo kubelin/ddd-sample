@@ -6,10 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * This class represents a Membership data transfer object (DTO). It contains information about a pet owner's membership.
+ *
+ * @author YourName
+ * @since 1.0
+ */
 @Getter
 @NoArgsConstructor
 public class MembershipDto {
-	public String dd;
 	private Long memberId;
 	private String memberType;
 	private String memberDetail;
